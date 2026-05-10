@@ -6,7 +6,7 @@
 #    By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/08 23:35:05 by ryatan            #+#    #+#              #
-#    Updated: 2026/05/08 23:35:06 by ryatan           ###   ########.fr        #
+#    Updated: 2026/05/10 13:49:19 by ryatan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 COMPILER = cc
 INCLUDE = -Iinclude -Ilibft
 CFLAGS = -Wall -Wextra -Werror
-MLX_F = -lXext -lX11 -lm -lz
+EXT_LIBS = -lreadline
 
 OBJ_DIR = obj
 SRC_DIR = src
@@ -27,8 +27,8 @@ LIBFT_DIR = libft
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
-$(NAME): $(OBJ) $(LIBFT) $(PRINTF) $(MLX)
-	$(COMPILER) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME)
+$(NAME): $(OBJ) $(LIBFT)
+	$(COMPILER) $(CFLAGS) $(OBJ) $(LIBFT) $(EXT_LIBS) -o $(NAME)
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
