@@ -1,0 +1,4 @@
+.clangd
+/obj
+*.o
+compile_commands.json
