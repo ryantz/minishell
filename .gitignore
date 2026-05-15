@@ -1,4 +1,5 @@
 .clangd
-/obj
+obj/
 *.o
 compile_commands.json
+.cache/
