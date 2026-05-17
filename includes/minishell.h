@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/05/10 13:46:50 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/05/17 21:15:05 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,16 @@
 # include <termios.h>
 # include <curses.h>
 # include <term.h>
+
+# include "libft.h"
+
+typedef enum e_error
+{
+	WRONG_ARG_COUNT,
+}	t_error;
+
+//errors
+void	print_error(t_error err_flag);
+int		error_checks(int argc);
 
 #endif
