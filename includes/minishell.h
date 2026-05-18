@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/05/17 21:15:05 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/05/18 12:07:46 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,12 @@
 
 # include "libft.h"
 
+typedef enum e_bool
+{
+	E_TRUE,
+	E_FALSE,
+}	t_bool;
+
 typedef enum e_error
 {
 	WRONG_ARG_COUNT,
@@ -39,6 +45,6 @@ typedef enum e_error
 
 //errors
 void	print_error(t_error err_flag);
-int		error_checks(int argc);
+t_bool	error_checks(int argc);
 
 #endif
