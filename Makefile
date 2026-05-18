@@ -6,20 +6,21 @@
 #    By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/08 23:35:05 by ryatan            #+#    #+#              #
-#    Updated: 2026/05/10 13:49:19 by ryatan           ###   ########.fr        #
+#    Updated: 2026/05/17 21:16:46 by ryatan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 COMPILER = cc
-INCLUDE = -Iinclude -Ilibft
+INCLUDE = -Iincludes -Ilibft
 CFLAGS = -Wall -Wextra -Werror
 EXT_LIBS = -lreadline
 
 OBJ_DIR = obj
 SRC_DIR = src
 
-SRC =  main.c \
+SRC =  errors.c \
+	   main.c
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
 

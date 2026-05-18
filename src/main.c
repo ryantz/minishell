@@ -2,8 +2,6 @@
 
 int	main(int argc, char **argv)
 {
-	char	*prompt;
-
-	if (argc < 2)
-		return (1);
+	error_checks(argc);
+	printf("%s", argv[0]);
 }
