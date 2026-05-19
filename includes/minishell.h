@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/05/20 02:33:46 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/05/20 02:39:52 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@
 # include <termios.h>
 # include <curses.h>
 # include <term.h>
-
-# include "libft.h"
 
 typedef enum e_bool
 {

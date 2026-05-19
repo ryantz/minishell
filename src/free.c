@@ -2,13 +2,13 @@
 
 void	free_all(char **arr)
 {
-	size_t	len;
+	size_t	i;
 
-	len = arr_len(arr);
-	while (len >= 0)
+	i = 0;
+	while (i < arr_len(arr))
 	{
-		free(arr[len]);
-		len--;
+		free(arr[i]);
+		i++;
 	}
 	free(arr);
 }
