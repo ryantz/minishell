@@ -10,13 +10,13 @@ void	log_split(char **arr)
 	size_t	i;
 
 	i = 0;
-	printf("split view: [");
+	printf("split view: {");
 	while (i < arr_len(arr))
 	{
 		printf("[");
-		printf("%s, ", arr[i]);
+		printf("%s", arr[i]);
 		printf("]");
 		i++;
 	}
-	printf("]\n");
+	printf("}\n");
 }
