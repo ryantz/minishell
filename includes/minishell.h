@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/05/18 12:07:46 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/05/20 02:33:46 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,19 @@ typedef enum e_error
 
 //errors
 void	print_error(t_error err_flag);
-t_bool	error_checks(int argc);
+t_bool	error_checks(int argc, char **argv);
+
+//loggers
+void	log_split(char **arr);
+void	log_print(char *log_message, char *var);
+
+// frees
+void	free_all(char **arr);
+
+//helpers
+size_t	arr_len(char **arr);
+
+//prompt
+int		prompt_loop(const char *prompt);
 
 #endif

@@ -6,7 +6,7 @@
 #    By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/08 23:35:05 by ryatan            #+#    #+#              #
-#    Updated: 2026/05/17 21:16:46 by ryatan           ###   ########.fr        #
+#    Updated: 2026/05/20 02:22:13 by ryatan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,8 @@ OBJ_DIR = obj
 SRC_DIR = src
 
 SRC =  errors.c \
+	   loggers.c \
+	   prompt.c \
 	   main.c
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
