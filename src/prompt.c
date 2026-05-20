@@ -10,19 +10,20 @@ int	prompt_loop(const char *prompt)
 	while (1)
 	{
 		rl_return = readline(prompt);
-		//log_print("String read from prompt:", rl_return);
-		input_split = ft_split(rl_return, ' ');
-		if (!input_split)
-		{
-			free_all(input_split);
-			return (1);
-		}
-		//log_split(input_split);
 		if (!rl_return)
 		{
 			perror("Error-> readline() returns NULL");
 			return (1);
 		}
+		log_print("String read from prompt:", rl_return);
+		input_split = ft_split(rl_return, ' ');
+		if (!input_split)
+		{
+			free(rl_return);
+			free_all(input_split);
+			return (1);
+		}
+		log_split(input_split);
 	}
 	return (0);
 }
@@ -56,6 +57,7 @@ char	*prompt_build(t_prompt *machine_info)
 	prompt[prompt_len] = 0;
 	ft_memcpy(prompt, machine_info->username, username_len);
 	ft_memcpy(prompt + username_len + 1, machine_info->hostname, hostname_len);
+	free(machine_info->hostname);
 	return (prompt);
 }
 
@@ -65,6 +67,7 @@ char	*get_hostname(const char *PATH)
 	int		bytes_read;
 	char	*buffer;
 	char	**split;
+	char	*hostname;
 
 	fd = open(PATH, O_RDONLY);
 	if (fd == -1)
@@ -74,7 +77,15 @@ char	*get_hostname(const char *PATH)
 		return (NULL);
 	bytes_read = read(fd, buffer, 100);
 	if (bytes_read <= 0)
+	{
+		free(buffer);
 		return (NULL);
+	}
 	split = ft_split(buffer, '.');
-	return (split[0]);
+	free(buffer);
+	if (!split)
+		return (NULL);
+	hostname = ft_strdup(split[0]);
+	free_all(split);
+	return (hostname);
 }
