@@ -1,6 +1,7 @@
 #include "minishell.h"
 
 char	*get_hostname(const char *PATH);
+void	create_prompt(t_prompt *machine_info, char **prompt);
 
 int	prompt_loop(const char *prompt)
 {
@@ -15,7 +16,7 @@ int	prompt_loop(const char *prompt)
 			perror("Error-> readline() returns NULL");
 			return (1);
 		}
-		log_print("String read from prompt:", rl_return);
+		//log_print("String read from prompt:", rl_return);
 		input_split = ft_split(rl_return, ' ');
 		if (!input_split)
 		{
@@ -23,42 +24,51 @@ int	prompt_loop(const char *prompt)
 			free_all(input_split);
 			return (1);
 		}
-		log_split(input_split);
+		//log_split(input_split);
 	}
 	return (0);
 }
 
-// TODO: expand the prompts as it goes into diff paths
-// ryatan@c1r6s2:~/path/$ 
 char	*prompt_build(t_prompt *machine_info)
 {
 	char	*prompt;
-	size_t	prompt_len;
-	size_t	username_len;
-	size_t	hostname_len;
 
 	if (!machine_info)
 		return (NULL);
 	machine_info->username = getenv("USER");
 	machine_info->hostname = get_hostname("/etc/hostname");
+	machine_info->path = getenv("PWD");
 	if (!machine_info->username || !machine_info->hostname)
 		return (NULL);
-	username_len = ft_strlen(machine_info->username);
-	hostname_len = ft_strlen(machine_info->hostname);
-	prompt_len = username_len + 1 + hostname_len + 4;
-	prompt = malloc((prompt_len + 1) * sizeof(char));
-	if (!prompt)
-		return (NULL);
-	prompt[username_len] = '@';
-	prompt[prompt_len - 1] = ' ';
-	prompt[prompt_len - 2] = '$';
-	prompt[prompt_len - 3] = '~';
-	prompt[prompt_len - 4] = ':';
-	prompt[prompt_len] = 0;
-	ft_memcpy(prompt, machine_info->username, username_len);
-	ft_memcpy(prompt + username_len + 1, machine_info->hostname, hostname_len);
+	machine_info->username_len = ft_strlen(machine_info->username);
+	machine_info->hostname_len = ft_strlen(machine_info->hostname);
+	machine_info->path_len = ft_strlen(machine_info->path);
+	machine_info->prompt_len = machine_info->username_len + 1
+		+ machine_info->hostname_len + 1 + machine_info->path_len + 3;
+	create_prompt(machine_info, &prompt);
 	free(machine_info->hostname);
 	return (prompt);
+}
+
+void	create_prompt(t_prompt *machine_info, char **prompt)
+{
+	*prompt = malloc((machine_info->prompt_len + 1) * sizeof(char));
+	if (!*prompt)
+		return ;
+	ft_memcpy(*prompt, machine_info->username, machine_info->username_len);
+	ft_memcpy(*prompt + machine_info->username_len + 1, machine_info->hostname,
+		machine_info->hostname_len);
+	ft_memcpy(*prompt + machine_info->username_len + 1
+		+ machine_info->hostname_len + 2, machine_info->path,
+		machine_info->path_len);
+	(*prompt)[machine_info->username_len] = '@';
+	(*prompt)[machine_info->prompt_len - 1] = ' ';
+	(*prompt)[machine_info->prompt_len - 2] = '$';
+	(*prompt)[machine_info->prompt_len] = 0;
+	(*prompt)[machine_info->username_len
+		+ machine_info->hostname_len + 1] = ':';
+	(*prompt)[machine_info->username_len
+		+ machine_info->hostname_len + 2] = '~';
 }
 
 char	*get_hostname(const char *PATH)

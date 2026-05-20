@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/05/20 13:22:04 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/05/20 20:25:33 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@
 
 # include "libft.h"
 
+# define PATH_BUFFER 1024
+
 typedef enum e_bool
 {
 	E_TRUE,
@@ -47,6 +49,11 @@ typedef struct s_prompt
 {
 	char	*username;
 	char	*hostname;
+	char	*path;
+	size_t	username_len;
+	size_t	hostname_len;
+	size_t	path_len;
+	size_t	prompt_len;
 }	t_prompt;
 
 //errors
