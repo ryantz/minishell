@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/05/20 02:58:48 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/05/20 13:22:04 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,12 @@ typedef enum e_error
 	WRONG_ARG_COUNT,
 }	t_error;
 
+typedef struct s_prompt
+{
+	char	*username;
+	char	*hostname;
+}	t_prompt;
+
 //errors
 void	print_error(t_error err_flag);
 t_bool	error_checks(int argc, char **argv);
@@ -59,5 +65,6 @@ size_t	arr_len(char **arr);
 
 //prompt
 int		prompt_loop(const char *prompt);
+char	*prompt_build(t_prompt *machine_info);
 
 #endif
