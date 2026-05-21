@@ -8,6 +8,16 @@ core Bash functionality which includes command execution, pipelines, redirection
 environment variable expansion and built in commands.
 
 ## Instructions
+compile the project with `make` and run the executable `./minishell`
+
+```bash
+make
+```
+```bash
+./minishell
+```
+
+Doing this will enter into minishell which should look similar to bash.
 ## Resources
 
 ## Notes (while developing)
