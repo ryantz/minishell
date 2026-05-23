@@ -6,7 +6,7 @@ void	create_prompt(t_prompt *machine_info, char **prompt);
 int	prompt_loop(const char *prompt)
 {
 	char	*rl_return;
-	char	**input_split;
+	t_token	*token_list;
 
 	while (1)
 	{
@@ -16,19 +16,19 @@ int	prompt_loop(const char *prompt)
 			perror("Error-> readline() returns NULL");
 			return (1);
 		}
-		//log_print("String read from prompt:", rl_return);
-		input_split = ft_split(rl_return, ' ');
-		if (!input_split)
+		log_print("String read from prompt:\n", rl_return);
+		token_list = create_token_list(rl_return);
+		if (!token_list)
 		{
 			free(rl_return);
-			free_all(input_split);
 			return (1);
 		}
-		//log_split(input_split);
+		log_list(token_list);
 	}
 	return (0);
 }
 
+// NOTE: getenv() might not work with command export
 char	*prompt_build(t_prompt *machine_info)
 {
 	char	*prompt;

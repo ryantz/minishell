@@ -6,7 +6,7 @@
 #    By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/08 23:35:05 by ryatan            #+#    #+#              #
-#    Updated: 2026/05/21 14:18:39 by ryatan           ###   ########.fr        #
+#    Updated: 2026/05/23 18:28:49 by ryatan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,11 +18,17 @@ EXT_LIBS = -lreadline
 
 OBJ_DIR = build
 SRC_DIR = src
+HLP_DIR = helpers
+PAR_DIR = parsing
 
-SRC =  $(SRC_DIR)/errors.c \
-	   $(SRC_DIR)/free.c \
-	   $(SRC_DIR)/helpers.c \
-	   $(SRC_DIR)/loggers.c \
+SRC =  $(SRC_DIR)/$(HLP_DIR)/errors.c \
+	   $(SRC_DIR)/$(HLP_DIR)/free.c \
+	   $(SRC_DIR)/$(HLP_DIR)/helpers.c \
+	   $(SRC_DIR)/$(HLP_DIR)/loggers.c \
+	   $(SRC_DIR)/$(PAR_DIR)/append_token.c \
+	   $(SRC_DIR)/$(PAR_DIR)/create_token_and.c \
+	   $(SRC_DIR)/$(PAR_DIR)/create_token_word_pipe_redir.c \
+	   $(SRC_DIR)/$(PAR_DIR)/lexer.c \
 	   $(SRC_DIR)/prompt.c \
 	   $(SRC_DIR)/main.c
 

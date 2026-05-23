@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/05/23 12:37:16 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/05/23 20:32:09 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,16 +62,20 @@ typedef enum e_token_type
 {
 	WORD,
 	PIPE,
-	REDIRECT_IN,
-	REDIRECT_OUT,
+	REDIR_IN,
+	REDIR_OUT,
+	REDIR_OUT_APPEND,
+	READ_TO_DELIM,
 	AND,
 	OR,
+	ERROR,
 }	t_token_type;
 
 typedef struct s_token
 {
 	char			*value;
 	t_token_type	type;
+	int				quotes;
 	struct	s_token	*next;
 }	t_token;
 
@@ -82,15 +86,35 @@ t_status	error_checks(int argc, char **argv);
 //loggers
 void		log_split(char **arr);
 void		log_print(char *log_message, char *var);
+void		log_list(t_token *token_list);
 
 // frees	
 void		free_all(char **arr);
 
 //helpers
 size_t		arr_len(char **arr);
+t_status	is_space(char c);
+t_status	is_lower(char c);
+t_status	is_operator(char c);
 
 //prompt	
 int			prompt_loop(const char *prompt);
 char		*prompt_build(t_prompt *machine_info);
+
+//lexer
+t_token	*create_token_list(char *input);
+
+//append_token
+void	append_token(t_token **head, t_token *token);
+
+//create_token_and
+t_token	*create_token(char *value, t_token_type type);
+t_token	*create_and_token(char *input, size_t *i);
+
+//create_token_word_pipe_redir
+t_token	*create_word_token(char *input, size_t *i);
+t_token	*create_pipe_token(char *input, size_t *i);
+t_token	*create_redirect_delim_token(char *input, size_t *i);
+t_token	*create_redirect_append_token(char *input, size_t *i);
 
 #endif
