@@ -6,7 +6,7 @@
 #    By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/08 23:35:05 by ryatan            #+#    #+#              #
-#    Updated: 2026/05/20 20:52:45 by ryatan           ###   ########.fr        #
+#    Updated: 2026/05/21 14:18:39 by ryatan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,17 +16,17 @@ INCLUDE = -Iincludes -Ilibft
 CFLAGS = -Wall -Wextra -Werror
 EXT_LIBS = -lreadline
 
-OBJ_DIR = obj
+OBJ_DIR = build
 SRC_DIR = src
 
-SRC =  errors.c \
-	   free.c \
-	   helpers.c \
-	   loggers.c \
-	   prompt.c \
-	   main.c
+SRC =  $(SRC_DIR)/errors.c \
+	   $(SRC_DIR)/free.c \
+	   $(SRC_DIR)/helpers.c \
+	   $(SRC_DIR)/loggers.c \
+	   $(SRC_DIR)/prompt.c \
+	   $(SRC_DIR)/main.c
 
-OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
+OBJ = $(SRC:$(SRC_DIR)%.c=$(OBJ_DIR)/%.o)
 
 LIBFT_DIR = libft
 
@@ -38,10 +38,8 @@ $(NAME): $(OBJ) $(LIBFT)
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
 
-$(OBJ_DIR): 
-	mkdir -p $(OBJ_DIR)
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	mkdir -p $(dir $@)
 	$(COMPILER) $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 all: $(NAME)
