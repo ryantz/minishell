@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/05/23 23:07:19 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/05/23 23:50:56 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,9 +103,6 @@ char		*prompt_build(t_prompt *machine_info);
 
 //lexer
 t_token		*create_token_list(char *input);
-
-//append_token
-void		append_token(t_token **head, t_token *token);
 
 //create_token_and
 t_token		*create_token(char *value, t_token_type type);

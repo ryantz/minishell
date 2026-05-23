@@ -2,7 +2,20 @@
 
 static void	determine_token_type(t_token **token, t_token **head, char *input,
 				size_t *i);
+static t_token	*find_last_token(t_token *head);
+static void	append_token(t_token **head, t_token *token);
 
+/*
+ * @params: 
+ * char *input -> input from stdin
+ *
+ * @return:
+ * a pointer to the head of the token list created
+ *
+ * @brief:
+ * creates a token list by appending all the tokens generated from
+ * scanning through the while string
+ */
 t_token	*create_token_list(char *input)
 {
 	size_t	i;
@@ -39,4 +52,33 @@ static void	determine_token_type(t_token **head, t_token **token, char *input,
 		if (*token)
 			append_token(head, *token);
 	}
+}
+
+
+static void	append_token(t_token **head, t_token *token)
+{
+	t_token	*last_element;
+
+	if (head != NULL)
+	{
+		if (*head == NULL)
+			*head = token;
+		else
+		{
+			last_element = find_last_token(*head);
+			last_element->next = token;
+		}
+	}
+}
+
+static t_token	*find_last_token(t_token *head)
+{
+	t_token	*ptr_to_head;
+
+	ptr_to_head = head;
+	if (ptr_to_head == NULL)
+		return (NULL);
+	while (ptr_to_head->next != NULL)
+		ptr_to_head = ptr_to_head->next;
+	return (ptr_to_head);
 }

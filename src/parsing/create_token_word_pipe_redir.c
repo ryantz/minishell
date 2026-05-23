@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/23 23:09:15 by ryatan            #+#    #+#             */
-/*   Updated: 2026/05/23 23:32:23 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/05/23 23:47:06 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,19 @@
 
 static int	check_quotes(char *input, size_t *i, size_t *start, size_t *len);
 
+/*
+ * @params: 
+ * char *input -> input from stdin
+ * size_t *i -> index that is passed by reference for updating
+ *
+ * @return:
+ * a token that can be used to push into a token list in order
+ *
+ * @brief:
+ * creates a token of type WORD
+ * if " or ' is detected, it sets the quote flag as 2 or 1 respectively
+ * it then stores everything INSIDE the quote as the value
+ */
 t_token	*create_word_token(char *input, size_t *i)
 {
 	size_t	len;
@@ -63,6 +76,18 @@ static int	check_quotes(char *input, size_t *i, size_t *start, size_t *len)
 	return (0);
 }
 
+/*
+ * @params: 
+ * char *input -> input from stdin
+ * size_t *i -> index that is passed by reference for updating
+ *
+ * @return:
+ * a token that can be used to push into a token list in order
+ *
+ * @brief:
+ * creates a token of type PIPE
+ * with a value of |
+ */
 t_token	*create_pipe_token(char *input, size_t *i)
 {
 	t_token	*token;
@@ -78,6 +103,18 @@ t_token	*create_pipe_token(char *input, size_t *i)
 	return (token);
 }
 
+/*
+ * @params: 
+ * char *input -> input from stdin
+ * size_t *i -> index that is passed by reference for updating
+ *
+ * @return:
+ * a token that can be used to push into a token list in order
+ *
+ * @brief:
+ * creates a token of type REDIR_IN or READ_TO_DELIM
+ * with value of << or < respectively
+ */
 t_token	*create_redirect_delim_token(char *input, size_t *i)
 {
 	t_token	*token;
@@ -93,6 +130,18 @@ t_token	*create_redirect_delim_token(char *input, size_t *i)
 	return (token);
 }
 
+/*
+ * @params: 
+ * char *input -> input from stdin
+ * size_t *i -> index that is passed by reference for updating
+ *
+ * @return:
+ * a token that can be used to push into a token list in order
+ *
+ * @brief:
+ * creates a token of type REDIR_OUT_APPEND or REDIR_OUT
+ * with value of >> or > respectively
+ */
 t_token	*create_redirect_append_token(char *input, size_t *i)
 {
 	t_token	*token;
