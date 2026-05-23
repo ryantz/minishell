@@ -3,7 +3,7 @@
 void	write_err(char *err_msg);
 void	print_error(t_error err_flag);
 
-t_bool	error_checks(int argc, char **argv)
+t_status	error_checks(int argc, char **argv)
 {
 	if (argc > 1 || argv[1])
 		return (print_error(WRONG_ARG_COUNT), E_FALSE);

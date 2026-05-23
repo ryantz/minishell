@@ -9,11 +9,11 @@
       "-Ilibft",
       "-c",
       "-o",
-      "obj/prompt.o",
-      "src/prompt.c"
+      "obj/errors.o",
+      "src/errors.c"
     ],
     "directory": "/home/ryantz/dev/42/minishell",
-    "file": "/home/ryantz/dev/42/minishell/src/prompt.c",
-    "output": "/home/ryantz/dev/42/minishell/obj/prompt.o"
+    "file": "/home/ryantz/dev/42/minishell/src/errors.c",
+    "output": "/home/ryantz/dev/42/minishell/obj/errors.o"
   }
 ]

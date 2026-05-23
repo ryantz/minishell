@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/05/20 20:25:33 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/05/23 12:37:16 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,13 @@
 
 # define PATH_BUFFER 1024
 
-typedef enum e_bool
+typedef enum e_status
 {
 	E_TRUE,
 	E_FALSE,
-}	t_bool;
+	E_SUCCESS,
+	E_FAIL,
+}	t_status;
 
 typedef enum e_error
 {
@@ -56,22 +58,39 @@ typedef struct s_prompt
 	size_t	prompt_len;
 }	t_prompt;
 
+typedef enum e_token_type
+{
+	WORD,
+	PIPE,
+	REDIRECT_IN,
+	REDIRECT_OUT,
+	AND,
+	OR,
+}	t_token_type;
+
+typedef struct s_token
+{
+	char			*value;
+	t_token_type	type;
+	struct	s_token	*next;
+}	t_token;
+
 //errors
-void	print_error(t_error err_flag);
-t_bool	error_checks(int argc, char **argv);
+void		print_error(t_error err_flag);
+t_status	error_checks(int argc, char **argv);
 
 //loggers
-void	log_split(char **arr);
-void	log_print(char *log_message, char *var);
+void		log_split(char **arr);
+void		log_print(char *log_message, char *var);
 
-// frees
-void	free_all(char **arr);
+// frees	
+void		free_all(char **arr);
 
 //helpers
-size_t	arr_len(char **arr);
+size_t		arr_len(char **arr);
 
-//prompt
-int		prompt_loop(const char *prompt);
-char	*prompt_build(t_prompt *machine_info);
+//prompt	
+int			prompt_loop(const char *prompt);
+char		*prompt_build(t_prompt *machine_info);
 
 #endif

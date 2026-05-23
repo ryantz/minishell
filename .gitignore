@@ -1,5 +1,3 @@
 obj/
 *.o
 .cache/
-.clangd
-complile_commands.json
