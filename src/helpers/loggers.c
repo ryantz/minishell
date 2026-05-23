@@ -14,11 +14,12 @@ void	log_list(t_token *token_list)
 	ptr = token_list;
 	while (ptr->next != NULL)
 	{
-		printf("[val: %s | type: %s] -> ", ptr->value,
-			get_token_type(ptr->type));
+		printf("[val: %s | type: %s | quotes: %d] -> ", ptr->value,
+			get_token_type(ptr->type), ptr->quotes);
 		ptr = ptr->next;
 	}
-	printf("[val: %s | type: %s]", ptr->value, get_token_type(ptr->type));
+	printf("[val: %s | type: %s | quotes: %d]", ptr->value,
+		get_token_type(ptr->type), ptr->quotes);
 	printf("\n");
 }
 

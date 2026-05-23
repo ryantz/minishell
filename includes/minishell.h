@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/05/23 20:32:09 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/05/23 23:07:19 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ typedef struct s_token
 	char			*value;
 	t_token_type	type;
 	int				quotes;
-	struct	s_token	*next;
+	struct s_token	*next;
 }	t_token;
 
 //errors
@@ -102,19 +102,19 @@ int			prompt_loop(const char *prompt);
 char		*prompt_build(t_prompt *machine_info);
 
 //lexer
-t_token	*create_token_list(char *input);
+t_token		*create_token_list(char *input);
 
 //append_token
-void	append_token(t_token **head, t_token *token);
+void		append_token(t_token **head, t_token *token);
 
 //create_token_and
-t_token	*create_token(char *value, t_token_type type);
-t_token	*create_and_token(char *input, size_t *i);
+t_token		*create_token(char *value, t_token_type type);
+t_token		*create_and_token(char *input, size_t *i);
 
 //create_token_word_pipe_redir
-t_token	*create_word_token(char *input, size_t *i);
-t_token	*create_pipe_token(char *input, size_t *i);
-t_token	*create_redirect_delim_token(char *input, size_t *i);
-t_token	*create_redirect_append_token(char *input, size_t *i);
+t_token		*create_word_token(char *input, size_t *i);
+t_token		*create_pipe_token(char *input, size_t *i);
+t_token		*create_redirect_delim_token(char *input, size_t *i);
+t_token		*create_redirect_append_token(char *input, size_t *i);
 
 #endif

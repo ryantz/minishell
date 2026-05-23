@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-static t_token *find_last_token(t_token *token);
+static t_token	*find_last_token(t_token *token);
 
 void	append_token(t_token **head, t_token *token)
 {
@@ -18,7 +18,7 @@ void	append_token(t_token **head, t_token *token)
 	}
 }
 
-static t_token *find_last_token(t_token *token)
+static t_token	*find_last_token(t_token *token)
 {
 	if (token == NULL)
 		return (NULL);

@@ -1,8 +1,3 @@
-/*
- * push into stack at every space
- * echo "hello">>text.txt
- */
-
 #include "minishell.h"
 
 t_token	*create_token(char *value, t_token_type type)
@@ -19,7 +14,7 @@ t_token	*create_token(char *value, t_token_type type)
 
 t_token	*create_and_token(char *input, size_t *i)
 {
-	t_token *token;
+	t_token	*token;
 
 	(*i)++;
 	if (input[*i] == '&')

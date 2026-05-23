@@ -6,7 +6,7 @@
 #    By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/08 23:35:05 by ryatan            #+#    #+#              #
-#    Updated: 2026/05/23 18:28:49 by ryatan           ###   ########.fr        #
+#    Updated: 2026/05/23 22:50:48 by ryatan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,9 +25,9 @@ SRC =  $(SRC_DIR)/$(HLP_DIR)/errors.c \
 	   $(SRC_DIR)/$(HLP_DIR)/free.c \
 	   $(SRC_DIR)/$(HLP_DIR)/helpers.c \
 	   $(SRC_DIR)/$(HLP_DIR)/loggers.c \
-	   $(SRC_DIR)/$(PAR_DIR)/append_token.c \
 	   $(SRC_DIR)/$(PAR_DIR)/create_token_and.c \
 	   $(SRC_DIR)/$(PAR_DIR)/create_token_word_pipe_redir.c \
+	   $(SRC_DIR)/$(PAR_DIR)/append_token.c \
 	   $(SRC_DIR)/$(PAR_DIR)/lexer.c \
 	   $(SRC_DIR)/prompt.c \
 	   $(SRC_DIR)/main.c
