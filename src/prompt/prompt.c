@@ -25,7 +25,10 @@ int	prompt_loop(const char *prompt)
 	{
 		rl_return = readline(prompt);
 		if (!rl_return)
+		{
+			printf("exit\n");
 			return (0);
+		}
 		if (*rl_return == '\0')
 		{
 			free(rl_return);
