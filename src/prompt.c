@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 00:18:13 by ryatan            #+#    #+#             */
-/*   Updated: 2026/05/24 00:18:14 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/06/01 14:15:04 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,20 @@ int	prompt_loop(const char *prompt)
 	{
 		rl_return = readline(prompt);
 		if (!rl_return)
-		{
-			perror("Error-> readline() returns NULL");
-			return (1);
-		}
-		log_print("String read from prompt:\n", rl_return);
-		token_list = create_token_list(rl_return);
-		if (!token_list)
+			return (0);
+		if (*rl_return == '\0')
 		{
 			free(rl_return);
-			return (1);
+			continue;
 		}
+		add_history(rl_return);
+		log_print("String read from prompt:\n", rl_return);
+		token_list = create_token_list(rl_return);
+		free(rl_return);
+		if (!token_list)
+			return (1);
 		log_list(token_list);
+		// add a free here
 	}
 	return (0);
 }
