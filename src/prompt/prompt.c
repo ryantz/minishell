@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 00:18:13 by ryatan            #+#    #+#             */
-/*   Updated: 2026/06/01 14:24:26 by fkoh             ###   ########.fr       */
+/*   Updated: 2026/06/01 16:12:11 by fkoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,15 @@ int	prompt_loop(const char *prompt)
 	t_token	*token_list;
 
 	init_signals();
+	rl_catch_signals = 0;
 	while (1)
 	{
 		rl_return = readline(prompt);
+		g_signal = 0;
 		if (!rl_return)
 		{
 			printf("exit\n");
-			return (0);
+			break;
 		}
 		if (*rl_return == '\0')
 		{

@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/06/01 14:19:45 by fkoh             ###   ########.fr       */
+/*   Updated: 2026/06/01 15:31:29 by fkoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,5 +117,6 @@ t_token		*create_redirect_append_token(char *input, size_t *i);
 //signal_handle
 void	init_signals(void);
 void	sigint_handler(int sig);
+extern volatile sig_atomic_t g_signal;
 
 #endif
