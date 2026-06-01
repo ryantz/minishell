@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
+/*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/05/23 23:50:56 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/06/01 14:19:45 by fkoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,5 +113,9 @@ t_token		*create_word_token(char *input, size_t *i);
 t_token		*create_pipe_token(char *input, size_t *i);
 t_token		*create_redirect_delim_token(char *input, size_t *i);
 t_token		*create_redirect_append_token(char *input, size_t *i);
+
+//signal_handle
+void	init_signals(void);
+void	sigint_handler(int sig);
 
 #endif
