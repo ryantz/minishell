@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
+/*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 00:17:58 by ryatan            #+#    #+#             */
-/*   Updated: 2026/06/01 13:59:36 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/07 15:00:14 by fkoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,15 @@ void	free_all(char **arr)
 	free(arr);
 }
 
-//t_status	free_token_list(t_token *token_list)
-//{
-//	if (!token_list)
-//		return (E_FAIL);
-//
-//}
+void	free_token_list(t_token *token_list)
+{
+	t_token	*tmp;
+
+	while (token_list)
+	{
+		tmp = token_list->next;
+		free(token_list->value);
+		free(token_list);
+		token_list = tmp;
+	}
+}
