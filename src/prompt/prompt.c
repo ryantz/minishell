@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 00:18:13 by ryatan            #+#    #+#             */
-/*   Updated: 2026/06/01 14:24:26 by fkoh             ###   ########.fr       */
+/*   Updated: 2026/07/08 15:39:13 by fkoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,33 +15,38 @@
 char	*get_hostname(const char *PATH);
 void	create_prompt(t_prompt *machine_info, char **prompt);
 
-int	prompt_loop(const char *prompt)
+int	prompt_loop(const char *prompt, t_env **env)
 {
-	char	*rl_return;
-	t_token	*token_list;
+	char		*rl_return;
+	t_token		*token_list;
+	t_pipeline	*pipelines;
 
 	init_signals();
 	while (1)
 	{
 		rl_return = readline(prompt);
 		if (!rl_return)
-		{
-			printf("exit\n");
-			return (0);
-		}
+			return (printf("exit\n"), 0);
 		if (*rl_return == '\0')
 		{
 			free(rl_return);
-			continue;
+			continue ;
 		}
 		add_history(rl_return);
 		log_print("String read from prompt:\n", rl_return);
 		token_list = create_token_list(rl_return);
 		free(rl_return);
 		if (!token_list)
-			return (1);
-		log_list(token_list);
-		// add a free here
+			continue ;
+		pipelines = parse_tokens(token_list);
+		free_token_list(token_list);
+		if (!pipelines)
+		{
+			write_err("syntax error");
+			continue ;
+		}
+		// next: expansion + execution go here
+		free_pipelines(pipelines);
 	}
 	return (0);
 }

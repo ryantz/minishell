@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_token_and.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
+/*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 00:17:44 by ryatan            #+#    #+#             */
-/*   Updated: 2026/05/24 00:17:44 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/08 16:10:07 by fkoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,11 @@ t_token	*create_token(char *value, t_token_type type)
 	t_token	*token;
 
 	token = malloc(sizeof(t_token));
+	if (!token)
+		return (NULL);
 	token->value = ft_strdup(value);
+	if (!token->value)
+		return (free(token), NULL);
 	token->type = type;
 	token->quotes = 0;
 	token->next = NULL;

@@ -3,78 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   create_token_word_pipe_redir.c                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
+/*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/23 23:09:15 by ryatan            #+#    #+#             */
-/*   Updated: 2026/05/24 00:17:39 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/08 16:10:06 by fkoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static int	check_quotes(char *input, size_t *i, size_t *start, size_t *len);
-
-/*
- * @params: 
- * char *input -> input from stdin
- * size_t *i -> index that is passed by reference for updating
- *
- * @return:
- * a token that can be used to push into a token list in order
- *
- * @brief:
- * creates a token of type WORD
- * if " or ' is detected, it sets the quote flag as 2 or 1 respectively
- * it then stores everything INSIDE the quote as the value
- */
-t_token	*create_word_token(char *input, size_t *i)
-{
-	size_t	len;
-	size_t	start;
-	t_token	*token;
-	char	*value;
-	int		quote_type;
-
-	start = *i;
-	len = 0;
-	quote_type = check_quotes(input, i, &start, &len);
-	if (quote_type == 0 && len == 0)
-		return (NULL);
-	value = ft_substr(input, start, len);
-	token = create_token(value, WORD);
-	token->quotes = quote_type;
-	free(value);
-	return (token);
-}
-
-static int	check_quotes(char *input, size_t *i, size_t *start, size_t *len)
-{
-	char	quotes;
-
-	quotes = 0;
-	if (input[*i] == '"' || input[*i] == '\'')
-	{
-		quotes = input[*i];
-		(*i)++;
-		*start = *i;
-	}
-	while (input[*i] && (quotes || (is_space(input[*i]) == E_FALSE
-				&& is_operator(input[*i]) == E_FALSE)))
-	{
-		if (quotes && (input[*i] == quotes))
-		{
-			(*i)++;
-			break ;
-		}
-		(*len)++;
-		(*i)++;
-	}
-	if (quotes == '\'')
-		return (1);
-	if (quotes == '"')
-		return (2);
-	return (0);
-}
 
 /*
  * @params: 

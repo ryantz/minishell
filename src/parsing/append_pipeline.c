@@ -1,39 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   append_pipeline.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/24 00:17:58 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/08 14:31:41 by fkoh             ###   ########.fr       */
+/*   Created: 2026/07/08 16:12:56 by fkoh              #+#    #+#             */
+/*   Updated: 2026/07/08 16:53:02 by fkoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_all(char **arr)
+void	append_pipeline(t_pipeline **head, t_pipeline *new)
 {
-	size_t	i;
+	t_pipeline	*ptr;
 
-	i = 0;
-	while (i < arr_len(arr))
+	if (!*head)
 	{
-		free(arr[i]);
-		i++;
+		*head = new;
+		return ;
 	}
-	free(arr);
-}
-
-void	free_token_list(t_token *token_list)
-{
-	t_token	*tmp;
-
-	while (token_list)
-	{
-		tmp = token_list->next;
-		free(token_list->value);
-		free(token_list);
-		token_list = tmp;
-	}
+	ptr = *head;
+	while (ptr->next)
+		ptr = ptr->next;
+	ptr->next = new;
 }
