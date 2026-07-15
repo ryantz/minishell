@@ -1,10 +1,53 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env_list.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/07/16 02:33:55 by ryatan            #+#    #+#             */
+/*   Updated: 2026/07/16 02:35:52 by ryatan           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
+
+static t_env	*new_env_node(char *key, char *value, int has_value);
+void			env_append(t_env *head, t_env *node);
+
+t_env	*env_init(char **envp)
+{
+	t_env	*head;
+	t_env	*node;
+	char	*equals_ptr;
+	int		i;
+
+	head = NULL;
+	i = 0;
+	while (envp[i])
+	{
+		equals_ptr = ft_strchr(envp[i], '=');
+		if (equals_ptr)
+			node = new_env_node(ft_substr(envp[i], 0, equals_ptr - envp[i]),
+					ft_strdup(equals_ptr + 1), 1);
+		else
+			node = new_env_node(ft_strdup(envp[i]), NULL, 0);
+		if (!node)
+			return (free_env(head), NULL);
+		if (!head)
+			head = node;
+		else
+			env_append(head, node);
+		i++;
+	}
+	return (head);
+}
 
 static t_env	*new_env_node(char *key, char *value, int has_value)
 {
 	t_env	*node;
 
-	if (!key || !value)
+	if (!key)
 	{
 		free(key);
 		free(value);
@@ -24,51 +67,14 @@ static t_env	*new_env_node(char *key, char *value, int has_value)
 	return (node);
 }
 
-t_env	*env_init(char **envp)
-{
-	t_env	*head;
-	t_env	*node;
-	char	*eq;
-	int		i;
-
-	head = NULL;
-	i = 0;
-	while (envp[i])
-	{
-		eq = ft_strchr(envp[i], '=');
-		if (eq)
-			node = new_env_node(ft_substr(envp[i], 0, eq - envp[i]),
-					ft_strdup(eq + 1), 1);
-		else
-			node = new_env_node(ft_strdup(envp[i]), ft_strdup(""), 0);
-		if (!node)
-			return (free_env(head), NULL);
-		if (!head)
-			head = node;
-		else
-			env_append(head, node);
-		i++;
-	}
-	return (head);
-}
-
 void	env_append(t_env *head, t_env *node)
 {
 	t_env	*ptr;
 
+	if (!head || !node)
+		return ;
 	ptr = head;
 	while (ptr->next)
 		ptr = ptr->next;
 	ptr->next = node;
-}
-
-char	*env_get(t_env *env, char *key)
-{
-	while (env)
-	{
-		if (ft_strcmp(env->key, key) == 0)
-			return (env->value);
-		env = env->next;
-	}
-	return (NULL);
 }

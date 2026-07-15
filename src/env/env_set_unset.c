@@ -1,24 +1,55 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env_set_unset.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/07/16 02:33:58 by ryatan            #+#    #+#             */
+/*   Updated: 2026/07/16 02:34:57 by ryatan           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static t_status	env_set_append_new(t_env **env, char *key, char *value);
+static t_status	is_valid_env_key(char *key);
 
 t_status	env_set(t_env **env, char *key, char *value)
 {
 	t_env	*ptr;
 
+	if (!env || !is_valid_env_key(key))
+		return (E_FALSE);
 	ptr = *env;
 	while (ptr)
 	{
 		if (ft_strcmp(ptr->key, key) == 0)
 		{
 			free(ptr->value);
-			ptr->value = ft_strdup(value);
-			ptr->has_value = 1;
+			ptr->value = value;
+			ptr->has_value = (value != NULL);
 			return (E_TRUE);
 		}
 		ptr = ptr->next;
 	}
 	return (env_set_append_new(env, key, value));
+}
+
+static t_status	is_valid_env_key(char *key)
+{
+	int	i;
+
+	if (!key || (!ft_isalpha(key[0]) && key[0] != '_'))
+		return (E_FALSE);
+	i = 1;
+	while (key[i])
+	{
+		if (!key || (!ft_isalnum(key[i]) && key[i] != '_'))
+			return (E_FALSE);
+		i++;
+	}
+	return (E_TRUE);
 }
 
 static t_status	env_set_append_new(t_env **env, char *key, char *value)
@@ -29,15 +60,15 @@ static t_status	env_set_append_new(t_env **env, char *key, char *value)
 	if (!node)
 		return (E_FALSE);
 	node->key = ft_strdup(key);
-	node->value = ft_strdup(value);
-	if (!node->key || !node->value)
+	node->value = value;
+	if (!node->key)
 	{
 		free(node->key);
 		free(node->value);
 		free(node);
 		return (E_FALSE);
 	}
-	node->has_value = 1;
+	node->has_value = (value != NULL);
 	node->next = NULL;
 	if (!*env)
 		*env = node;
@@ -51,6 +82,8 @@ t_status	env_unset(t_env **env, char *key)
 	t_env	*ptr;
 	t_env	*prev;
 
+	if (!env || !*env || !key)
+		return (E_FALSE);
 	ptr = *env;
 	prev = NULL;
 	while (ptr)
@@ -70,44 +103,4 @@ t_status	env_unset(t_env **env, char *key)
 		ptr = ptr->next;
 	}
 	return (E_FALSE);
-}
-
-char	**env_to_array(t_env *env)
-{
-	char	**arr;
-	t_env	*ptr;
-	size_t	i;
-	size_t	count;
-
-	count = 0;
-	ptr = env;
-	while (ptr)
-		count++, ptr = ptr->next;
-	arr = malloc((count + 1) * sizeof(char *));
-	if (!arr)
-		return (NULL);
-	i = 0;
-	ptr = env;
-	while (ptr)
-	{
-		arr[i] = ft_strjoin_free(ft_strjoin(ptr->key, "="), ptr->value);
-		ptr = ptr->next;
-		i++;
-	}
-	arr[i] = NULL;
-	return (arr);
-}
-
-void	free_env(t_env *env)
-{
-	t_env	*tmp;
-
-	while (env)
-	{
-		tmp = env->next;
-		free(env->key);
-		free(env->value);
-		free(env);
-		env = tmp;
-	}
 }
