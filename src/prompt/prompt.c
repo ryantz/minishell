@@ -22,6 +22,7 @@ int	prompt_loop(const char *prompt, t_env **env)
 	t_pipeline	*pipelines;
 
 	init_signals();
+	printf("env: %s\n", env[0]->value);
 	while (1)
 	{
 		rl_return = readline(prompt);
@@ -33,7 +34,6 @@ int	prompt_loop(const char *prompt, t_env **env)
 			continue ;
 		}
 		add_history(rl_return);
-		log_print("String read from prompt:\n", rl_return);
 		token_list = create_token_list(rl_return);
 		free(rl_return);
 		if (!token_list)
@@ -46,6 +46,7 @@ int	prompt_loop(const char *prompt, t_env **env)
 			continue ;
 		}
 		// next: expansion + execution go here
+		// evaluate_pipeline(pipelines);
 		free_pipelines(pipelines);
 	}
 	return (0);

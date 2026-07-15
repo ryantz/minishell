@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/08 17:08:02 by fkoh             ###   ########.fr       */
+/*   Updated: 2026/07/15 13:26:50 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ typedef struct s_env
 {
 	char			*key;
 	char			*value;
+	int				has_value;
 	struct s_env	*next;
 }	t_env;
 
@@ -150,10 +151,11 @@ t_status	is_lower(char c);
 t_status	is_operator(char c);
 t_status	is_numeric(char *str);
 char		*ft_strjoin_free(char *s1, char *s2);
+int 		ft_strcmp(const char *s1, const char *s2);
 
 //prompt	
 //int			prompt_loop(const char *prompt);
-int	prompt_loop(const char *prompt, t_env **env);
+int			prompt_loop(const char *prompt, t_env **env);
 
 char		*prompt_build(t_prompt *machine_info);
 
@@ -199,6 +201,7 @@ char		*env_get(t_env *env, char *key);
 t_status	env_set(t_env **env, char *key, char *value);
 t_status	env_unset(t_env **env, char *key);
 char		**env_to_array(t_env *env);
+void		free_env(t_env *env);
 
 //builtins
 t_status	is_builtin(char *cmd_name);

@@ -41,6 +41,10 @@ SRC =  $(SRC_DIR)/$(HLP_DIR)/errors.c \
 	   $(SRC_DIR)/$(PAR_DIR)/parser_cmd.c \
 	   $(SRC_DIR)/$(PRM_DIR)/prompt.c \
 	   $(SRC_DIR)/$(PRM_DIR)/signal_handle.c \
+	   $(SRC_DIR)/$(ENV_DIR)/env_list.c \
+	   $(SRC_DIR)/$(ENV_DIR)/env_set_unset.c \
+	   $(SRC_DIR)/$(ENV_DIR)/print_sorted_env.c \
+	   $(SRC_DIR)/$(HLP_DIR)/strcmp.c \
 	   $(SRC_DIR)/main.c
 
 OBJ = $(SRC:$(SRC_DIR)%.c=$(OBJ_DIR)/%.o)

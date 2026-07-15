@@ -43,6 +43,11 @@ t_status	add_redir(t_cmd *cmd, t_token **cursor)
 	return (E_TRUE);
 }
 
+// pass in the cursor and argc by reference (so it changes the argc value)
+// argv of one cmd
+// starting cannot be a | && ||
+// cmd -> argv
+// basically what comes after the cmd
 t_status	count_argv(t_token *cursor, int *argc)
 {
 	*argc = 0;
@@ -64,6 +69,8 @@ t_status	count_argv(t_token *cursor, int *argc)
 	return (E_TRUE);
 }
 
+// skip the redirect token to the next token
+// after a redirect it should be a word. if not return false
 static t_status	skip_redir_pair(t_token **cursor)
 {
 	*cursor = (*cursor)->next;

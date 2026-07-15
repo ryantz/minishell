@@ -17,7 +17,7 @@
 static t_status	parse_one_pipeline(t_token **cursor, t_pipeline **out);
 static t_status	build_pipeline_cmds(t_token **cursor, t_pipeline *pipeline);
 static t_status	consume_link_operator(t_token **cursor, t_pipeline *pipeline);
-static t_status	consume_pipe_separator(t_token **cursor);
+//static t_status	consume_pipe_separator(t_token **cursor);
 
 t_pipeline	*parse_tokens(t_token *tokens)
 {
@@ -81,15 +81,15 @@ static t_status	build_pipeline_cmds(t_token **cursor, t_pipeline *pipeline)
 	return (E_TRUE);
 }
 
-static t_status	consume_pipe_separator(t_token **cursor)
-{
-	if ((*cursor)->type != PIPE)
-		return (E_TRUE);
-	*cursor = (*cursor)->next;
-	if (!*cursor)
-		return (E_FALSE);
-	return (E_TRUE);
-}
+// static t_status	consume_pipe_separator(t_token **cursor)
+// {
+// 	if ((*cursor)->type != PIPE)
+// 		return (E_TRUE);
+// 	*cursor = (*cursor)->next;
+// 	if (!*cursor)
+// 		return (E_FALSE);
+// 	return (E_TRUE);
+// }
 
 static t_status	consume_link_operator(t_token **cursor, t_pipeline *pipeline)
 {
