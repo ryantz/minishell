@@ -3,32 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
+/*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 00:17:48 by ryatan            #+#    #+#             */
-/*   Updated: 2026/05/24 00:19:18 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/15 18:33:16 by fkoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static void		determine_token_type(t_token **token, t_token **head,
-					char *input, size_t *i);
+					char *input, size_t *i, t_env *env, int status);
 static t_token	*find_last_token(t_token *head);
 static void		append_token(t_token **head, t_token *token);
 
-/*
- * @params: 
- * char *input -> input from stdin
- *
- * @return:
- * a pointer to the head of the token list created
- *
- * @brief:
- * creates a token list by appending all the tokens generated from
- * scanning through the while string
- */
-t_token	*create_token_list(char *input)
+t_token	*create_token_list(char *input, t_env *env, int status)
 {
 	size_t	i;
 	t_token	*token;
@@ -37,12 +26,12 @@ t_token	*create_token_list(char *input)
 	i = 0;
 	head = NULL;
 	token = NULL;
-	determine_token_type(&head, &token, input, &i);
+	determine_token_type(&head, &token, input, &i, env, status);
 	return (head);
 }
 
 static void	determine_token_type(t_token **head, t_token **token, char *input,
-				size_t *i)
+				size_t *i, t_env *env, int status)
 {
 	while (input[*i])
 	{
@@ -60,7 +49,7 @@ static void	determine_token_type(t_token **head, t_token **token, char *input,
 		else if (input[*i] == '>')
 			*token = create_redirect_append_token(input, i);
 		else
-			*token = create_word_token(input, i);
+			*token = create_word_token(input, i, env, status);
 		if (*token)
 			append_token(head, *token);
 	}

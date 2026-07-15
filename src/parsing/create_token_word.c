@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/08 16:15:11 by fkoh              #+#    #+#             */
-/*   Updated: 2026/07/08 16:20:00 by fkoh             ###   ########.fr       */
+/*   Updated: 2026/07/15 18:33:59 by fkoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static t_token	*finalize_word_token(char *value, int any_quote)
 	return (token);
 }
 
-t_token	*create_word_token(char *input, size_t *i)
+t_token	*create_word_token(char *input, size_t *i, t_env *env, int status)
 {
 	char	*value;
 	char	*segment;
@@ -87,6 +87,8 @@ t_token	*create_word_token(char *input, size_t *i)
 			segment = extract_bare_segment(input, i);
 			seg_quote = 0;
 		}
+		if (seg_quote != 1)
+			segment = expand_segment(segment, env, status);
 		if (seg_quote)
 			any_quote = seg_quote;
 		value = ft_strjoin_free(value, segment);

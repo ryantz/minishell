@@ -1,58 +1,8 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   prompt.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/24 00:18:13 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/08 15:39:13 by fkoh             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
-char	*get_hostname(const char *PATH);
-void	create_prompt(t_prompt *machine_info, char **prompt);
+static char	*get_hostname(const char *path);
+void		create_prompt(t_prompt *machine_info, char **prompt);
 
-int	prompt_loop(const char *prompt, t_env **env)
-{
-	char		*rl_return;
-	t_token		*token_list;
-	t_pipeline	*pipelines;
-
-	init_signals();
-	printf("env: %s\n", env[0]->value);
-	while (1)
-	{
-		rl_return = readline(prompt);
-		if (!rl_return)
-			return (printf("exit\n"), 0);
-		if (*rl_return == '\0')
-		{
-			free(rl_return);
-			continue ;
-		}
-		add_history(rl_return);
-		token_list = create_token_list(rl_return);
-		free(rl_return);
-		if (!token_list)
-			continue ;
-		pipelines = parse_tokens(token_list);
-		free_token_list(token_list);
-		if (!pipelines)
-		{
-			write_err("syntax error");
-			continue ;
-		}
-		// next: expansion + execution go here
-		// evaluate_pipeline(pipelines);
-		free_pipelines(pipelines);
-	}
-	return (0);
-}
-
-// NOTE: getenv() might not work with command export
 char	*prompt_build(t_prompt *machine_info)
 {
 	char	*prompt;
@@ -95,7 +45,7 @@ void	create_prompt(t_prompt *machine_info, char **prompt)
 		+ machine_info->hostname_len + 2] = '~';
 }
 
-char	*get_hostname(const char *PATH)
+static char	*get_hostname(const char *path)
 {
 	int		fd;
 	int		bytes_read;
@@ -103,7 +53,7 @@ char	*get_hostname(const char *PATH)
 	char	**split;
 	char	*hostname;
 
-	fd = open(PATH, O_RDONLY);
+	fd = open(path, O_RDONLY);
 	if (fd == -1)
 		return (NULL);
 	buffer = malloc(100 * sizeof(char));
