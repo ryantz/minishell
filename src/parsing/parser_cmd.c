@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   paser_cmd.c                                        :+:      :+:    :+:   */
+/*   parser_cmd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/08 16:14:30 by fkoh              #+#    #+#             */
-/*   Updated: 2026/07/08 16:20:01 by fkoh             ###   ########.fr       */
+/*   Updated: 2026/07/16 00:51:17 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ t_status	parse_one_cmd(t_token **cursor, t_cmd **out)
 static t_status	build_cmd_argv(t_token **cursor, t_cmd *cmd, int *i)
 {
 	while (*cursor && (*cursor)->type != PIPE
-		&& (*cursor)->type != AND && (*cursor)->type != OR)
+		&& (*cursor)->type != L_AND && (*cursor)->type != L_OR)
 	{
 		if (process_cmd_token(cursor, cmd, i) == E_FALSE)
 		{

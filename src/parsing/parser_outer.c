@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/08 16:13:57 by fkoh              #+#    #+#             */
-/*   Updated: 2026/07/08 16:16:17 by fkoh             ###   ########.fr       */
+/*   Updated: 2026/07/16 00:50:42 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static t_status	parse_one_pipeline(t_token **cursor, t_pipeline **out)
 		return (E_FALSE);
 	pipeline->cmds = NULL;
 	pipeline->next = NULL;
-	pipeline->link_to_next = LINK_NONE;
+	pipeline->link_to_next = NONE;
 	if (build_pipeline_cmds(cursor, pipeline) == E_FALSE)
 		return (free(pipeline), E_FALSE);
 	if (consume_link_operator(cursor, pipeline) == E_FALSE)
@@ -65,7 +65,7 @@ static t_status	build_pipeline_cmds(t_token **cursor, t_pipeline *pipeline)
 {
 	t_cmd	*cmd;
 
-	while (*cursor && (*cursor)->type != AND && (*cursor)->type != OR)
+	while (*cursor && (*cursor)->type != L_AND && (*cursor)->type != L_OR)
 	{
 		if (parse_one_cmd(cursor, &cmd) == E_FALSE)
 		{
@@ -95,10 +95,9 @@ static t_status	consume_link_operator(t_token **cursor, t_pipeline *pipeline)
 {
 	if (!*cursor)
 		return (E_TRUE);
-	if ((*cursor)->type == AND)
-		pipeline->link_to_next = LINK_AND;
-	else
-		pipeline->link_to_next = LINK_OR;
+	pipeline->link_to_next = NONE;
+	if ((*cursor)->type == L_AND || (*cursor)->type == L_OR)
+		pipeline->link_to_next = (*cursor)->type;
 	*cursor = (*cursor)->next;
 	if (!*cursor)
 		return (E_FALSE);

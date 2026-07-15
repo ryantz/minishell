@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/15 13:26:50 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/16 00:43:08 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,14 @@ typedef enum e_token_type
 {
 	WORD,
 	PIPE,
-	REDIR_IN,
-	REDIR_OUT,
-	REDIR_OUT_APPEND,
-	READ_TO_DELIM,
-	AND,
-	OR,
+	R_IN,
+	R_OUT,
+	R_APPEND,
+	R_HEREDOC,
+	L_AND,
+	L_OR,
 	ERROR,
+	NONE,
 }	t_token_type;
 
 typedef struct s_token
@@ -80,17 +81,9 @@ typedef struct s_token
 }	t_token;
 
 // parser: redirections
-typedef enum e_redir_type
-{
-	R_IN, // < read from a file
-	R_OUT, // > write to a file, truncating it
-	R_APPEND, // >> write to a file, appending
-	R_HEREDOC, // << read from stdin until a delimiter line
-}	t_redir_type;
-
 typedef struct s_redir
 {
-	t_redir_type	type;
+	t_token_type	type;
 	char			*target; //string that comes after redir operator
 	struct s_redir	*next; //next redir in one command
 }	t_redir;
@@ -103,18 +96,10 @@ typedef struct s_cmd
 	struct s_cmd	*next;	//next command in the same pipe chain
 }	t_cmd;
 
-// parser: pipelines (chained via &&/||, linked via ->next)
-typedef enum e_link
-{
-	LINK_NONE, //nothing follows, this is the last pipeline
-	LINK_AND, //"&&" follows
-	LINK_OR, //"||" follows
-}	t_link;
-
 typedef struct s_pipeline
 {
 	t_cmd				*cmds; //linked list of t_cmd connected by |
-	t_link				link_to_next; //operator after pipeline && or ||
+	t_token_type		link_to_next; //operator after pipeline && or ||
 	struct s_pipeline	*next; //pointer to next pipeline node
 }	t_pipeline;
 

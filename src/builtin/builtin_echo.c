@@ -3,13 +3,13 @@
 int	builtin_echo(char **argv)
 {
 	int	i;
-	int	newline;
+	int	new_line;
 
 	i = 1;
-	newline = 1;
+	new_line = 1;
 	while (argv[i] && ft_strcmp(argv[i], "-n") == 0)
 	{
-		newline = 0;
+		new_line = 0;
 		i++;
 	}
 	while (argv[i])
@@ -19,7 +19,7 @@ int	builtin_echo(char **argv)
 			printf(" ");
 		i++;
 	}
-	if (newline)
+	if (new_line)
 		printf("\n");
 	return (0);
 }

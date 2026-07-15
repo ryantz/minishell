@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/23 23:09:15 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/08 16:10:06 by fkoh             ###   ########.fr       */
+/*   Updated: 2026/07/16 00:52:45 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_token	*create_pipe_token(char *input, size_t *i)
 	if (input[*i] == '|')
 	{
 		(*i)++;
-		token = create_token("||", OR);
+		token = create_token("||", L_OR);
 	}
 	else
 		token = create_token("|", PIPE);
@@ -59,10 +59,10 @@ t_token	*create_redirect_delim_token(char *input, size_t *i)
 	if (input[*i] == '<')
 	{
 		(*i)++;
-		token = create_token("<<", READ_TO_DELIM);
+		token = create_token("<<", R_HEREDOC);
 	}
 	else
-		token = create_token("<", REDIR_IN);
+		token = create_token("<", R_IN);
 	return (token);
 }
 
@@ -86,9 +86,9 @@ t_token	*create_redirect_append_token(char *input, size_t *i)
 	if (input[*i] == '>')
 	{
 		(*i)++;
-		token = create_token(">>", REDIR_OUT_APPEND);
+		token = create_token(">>", R_APPEND);
 	}
 	else
-		token = create_token(">", REDIR_OUT);
+		token = create_token(">", R_OUT);
 	return (token);
 }

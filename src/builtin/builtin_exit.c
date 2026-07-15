@@ -1,3 +1,5 @@
+#include "minishell.h"
+
 int	builtin_exit(char **argv, int last_status)
 {
 	long	code;
