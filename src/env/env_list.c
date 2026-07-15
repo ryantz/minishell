@@ -1,7 +1,28 @@
 #include "minishell.h"
 
-static t_env	*new_env_node(char *key, char *value, int has_value);
-void	env_append(t_env *head, t_env *node);
+static t_env	*new_env_node(char *key, char *value, int has_value)
+{
+	t_env	*node;
+
+	if (!key || !value)
+	{
+		free(key);
+		free(value);
+		return (NULL);
+	}
+	node = malloc(sizeof(t_env));
+	if (!node)
+	{
+		free(key);
+		free(value);
+		return (NULL);
+	}
+	node->key = key;
+	node->value = value;
+	node->has_value = has_value;
+	node->next = NULL;
+	return (node);
+}
 
 t_env	*env_init(char **envp)
 {
@@ -29,22 +50,6 @@ t_env	*env_init(char **envp)
 		i++;
 	}
 	return (head);
-}
-
-static t_env	*new_env_node(char *key, char *value, int has_value)
-{
-	t_env	*node;
-
-	if (!key || !value)
-		return (free(key), free(value), NULL);
-	node = malloc(sizeof(t_env));
-	if (!node)
-		return (free(key), free(value), NULL);
-	node->key = key;
-	node->value = value;
-	node->has_value = has_value;
-	node->next = NULL;
-	return (node);
 }
 
 void	env_append(t_env *head, t_env *node)

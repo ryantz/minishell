@@ -73,5 +73,8 @@ static void	sort_env_array(t_env **arr, size_t count)
 
 static void	print_one_env(t_env *node)
 {
-	printf("declare -x %s=\"%s\"\n", node->key, node->value);
+	if (node->has_value)
+		printf("declare -x %s=\"%s\"\n", node->key, node->value);
+	else
+		printf("declare -x %s\n", node->key);
 }
