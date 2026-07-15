@@ -31,7 +31,12 @@ static t_status	env_set_append_new(t_env **env, char *key, char *value)
 	node->key = ft_strdup(key);
 	node->value = ft_strdup(value);
 	if (!node->key || !node->value)
-		return (free(node->key), free(node->value), free(node), E_FALSE);
+	{
+		free(node->key);
+		free(node->value);
+		free(node);
+		return (E_FALSE);
+	}
 	node->has_value = 1;
 	node->next = NULL;
 	if (!*env)
