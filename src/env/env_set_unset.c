@@ -20,7 +20,10 @@ t_status	env_set(t_env **env, char *key, char *value)
 	t_env	*ptr;
 
 	if (!env || !is_valid_env_key(key))
+	{
+		free(value);
 		return (E_FALSE);
+	}
 	ptr = *env;
 	while (ptr)
 	{

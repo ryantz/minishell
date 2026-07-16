@@ -19,33 +19,46 @@ EXT_LIBS = -lreadline
 OBJ_DIR = build
 SRC_DIR = src
 HLP_DIR = helpers
+TOKEN_DIR = tokenization
 PAR_DIR = parsing
 PRM_DIR = prompt
 ENV_DIR = env
+BUILTIN_DIR = builtin 
+EXPAND_DIR = expansion
+EXE_DIR = executor
 
 SRC =  $(SRC_DIR)/$(HLP_DIR)/errors.c \
 	   $(SRC_DIR)/$(HLP_DIR)/free_pipeline.c \
 	   $(SRC_DIR)/$(HLP_DIR)/free.c \
+	   $(SRC_DIR)/$(HLP_DIR)/ft_strcmp.c \
 	   $(SRC_DIR)/$(HLP_DIR)/helpers.c \
 	   $(SRC_DIR)/$(HLP_DIR)/loggers.c \
 	   $(SRC_DIR)/$(PAR_DIR)/append_cmd.c \
 	   $(SRC_DIR)/$(PAR_DIR)/append_pipeline.c \
 	   $(SRC_DIR)/$(PAR_DIR)/append_redir.c \
-	   $(SRC_DIR)/$(PAR_DIR)/create_token_and.c \
-	   $(SRC_DIR)/$(PAR_DIR)/create_token_word.c \
-	   $(SRC_DIR)/$(PAR_DIR)/create_token_word_pipe_redir.c \
-	   $(SRC_DIR)/$(PAR_DIR)/lexer.c \
 	   $(SRC_DIR)/$(PAR_DIR)/parser_free.c \
 	   $(SRC_DIR)/$(PAR_DIR)/parser_outer.c \
 	   $(SRC_DIR)/$(PAR_DIR)/parser_redir.c \
 	   $(SRC_DIR)/$(PAR_DIR)/parser_cmd.c \
-	   $(SRC_DIR)/$(PRM_DIR)/prompt.c \
+	   $(SRC_DIR)/$(TOKEN_DIR)/create_token_and.c \
+	   $(SRC_DIR)/$(TOKEN_DIR)/create_token_word.c \
+	   $(SRC_DIR)/$(TOKEN_DIR)/create_token_word_pipe_redir.c \
+	   $(SRC_DIR)/$(TOKEN_DIR)/lexer.c \
+	   $(SRC_DIR)/$(PRM_DIR)/prompt_build.c \
+	   $(SRC_DIR)/$(PRM_DIR)/prompt_loop.c \
 	   $(SRC_DIR)/$(PRM_DIR)/signal_handle.c \
+	   $(SRC_DIR)/$(ENV_DIR)/env_get.c \
 	   $(SRC_DIR)/$(ENV_DIR)/env_list.c \
 	   $(SRC_DIR)/$(ENV_DIR)/env_set_unset.c \
+	   $(SRC_DIR)/$(ENV_DIR)/env_to_array.c \
 	   $(SRC_DIR)/$(ENV_DIR)/print_sorted_env.c \
-	   $(SRC_DIR)/$(HLP_DIR)/strcmp.c \
-	   $(SRC_DIR)/main.c
+	   $(SRC_DIR)/$(ENV_DIR)/print_sorted_env.c \
+	   $(SRC_DIR)/$(EXPAND_DIR)/expand_build.c \
+	   $(SRC_DIR)/$(EXPAND_DIR)/expand_len.c \
+	   $(SRC_DIR)/$(EXPAND_DIR)/expand_var.c \
+	   $(SRC_DIR)/$(EXE_DIR)/builtin_dispatch.c \
+	   $(SRC_DIR)/$(EXE_DIR)/executor_exec.c \
+	   $(SRC_DIR)/test_main.c
 
 OBJ = $(SRC:$(SRC_DIR)%.c=$(OBJ_DIR)/%.o)
 

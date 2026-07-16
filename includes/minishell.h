@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/16 00:43:08 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/16 15:39:50 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <sys/stat.h>
 # include <sys/types.h>
 # include <dirent.h>
+# include <errno.h>
 # include <string.h>
 # include <sys/ioctl.h>
 # include <termios.h>
@@ -38,8 +39,6 @@ typedef enum e_status
 {
 	E_TRUE,
 	E_FALSE,
-	E_SUCCESS,
-	E_FAIL,
 }	t_status;
 
 typedef enum e_error
@@ -145,17 +144,21 @@ int			prompt_loop(const char *prompt, t_env **env);
 char		*prompt_build(t_prompt *machine_info);
 
 //lexer
-t_token		*create_token_list(char *input);
+t_token		*create_token_list(char *input, t_env *env, int status);
 
 //create_token_and
 t_token		*create_token(char *value, t_token_type type);
 t_token		*create_and_token(char *input, size_t *i);
 
 //create_token_word_pipe_redir
-t_token		*create_word_token(char *input, size_t *i);
+//t_token		*create_word_token(char *input, size_t *i);
+t_token		*create_word_token(char *input, size_t *i, t_env *env, int status);
 t_token		*create_pipe_token(char *input, size_t *i);
 t_token		*create_redirect_delim_token(char *input, size_t *i);
 t_token		*create_redirect_append_token(char *input, size_t *i);
+
+char	*expand_segment(char *segment, t_env *env, int status);
+
 
 //parser (outer layer: pipelines split on AND/OR)
 t_pipeline	*parse_tokens(t_token *tokens);
@@ -191,13 +194,13 @@ void		free_env(t_env *env);
 //builtins
 t_status	is_builtin(char *cmd_name);
 int			exec_builtin(t_cmd *cmd, t_env **env, int last_status);
-int			builtin_cd(char **argv, t_env **env);
-int			builtin_echo(char **argv);
-int			builtin_pwd(void);
-int			builtin_export(char **argv, t_env **env);
-int			builtin_unset(char **argv, t_env **env);
-int			builtin_env(t_env *env);
-int			builtin_exit(char **argv, int last_status);
+t_status	builtin_cd(char **argv, t_env **env);
+t_status	builtin_echo(char **argv);
+t_status	builtin_pwd(void);
+t_status	builtin_export(char **argv, t_env **env);
+t_status	builtin_unset(char **argv, t_env **env);
+t_status	builtin_env(t_env *env);
+t_status	builtin_exit(char **argv, int last_status);
 void		print_sorted_env(t_env *env);
 
 //signal_handle

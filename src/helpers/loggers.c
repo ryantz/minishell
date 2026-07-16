@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 00:18:06 by ryatan            #+#    #+#             */
-/*   Updated: 2026/05/24 00:18:06 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/16 14:26:28 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,17 +57,17 @@ static char	*get_token_type(t_token_type type)
 		return ("WORD");
 	else if (type == PIPE)
 		return ("PIPE");
-	else if (type == REDIR_IN)
+	else if (type == R_IN)
 		return ("REDIR_IN");
-	else if (type == REDIR_OUT)
+	else if (type == R_OUT)
 		return ("REDIR_OUT");
-	else if (type == REDIR_OUT_APPEND)
+	else if (type == R_APPEND)
 		return ("REDIR_OUT_APPEND");
-	else if (type == READ_TO_DELIM)
+	else if (type == R_HEREDOC)
 		return ("READ_TO_DELIM");
-	else if (type == AND)
+	else if (type == L_AND)
 		return ("AND");
-	else if (type == OR)
+	else if (type == L_OR)
 		return ("OR");
 	else if (type == ERROR)
 		return ("ERROR");

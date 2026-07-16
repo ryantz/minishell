@@ -60,7 +60,7 @@ static int	process_line(char *line, t_env **env, int last_status)
 		write_err("syntax error");
 		return (2);
 	}
-	last_status = evaluate_pipeline(pipelines, env);
+	//last_status = evaluate_pipeline(pipelines, env);
 	free_pipelines(pipelines);
 	return (last_status);
 }
