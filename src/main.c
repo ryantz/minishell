@@ -14,8 +14,6 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_prompt	machine_info;
-	char		*prompt;
 	t_env		*env;
 
 	if (error_checks(argc, argv) == E_FALSE)
@@ -23,10 +21,8 @@ int	main(int argc, char **argv, char **envp)
 	env = env_init(envp);
 	if (!env)
 		return (write_err("Failed to initialize environment\n"), 1);
-	prompt = prompt_build(&machine_info);
-	if (prompt_loop(prompt, &env))
+	if (prompt_loop("tiny-> ", &env))
 		return (1);
 	free_env(env);
-	free(prompt);
 	return (0);
 }
