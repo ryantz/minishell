@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 02:33:58 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/16 02:34:57 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/16 17:40:26 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,4 +106,18 @@ t_status	env_unset(t_env **env, char *key)
 		ptr = ptr->next;
 	}
 	return (E_FALSE);
+}
+
+t_status	env_touch(t_env **env, char *key)
+{
+	t_env	*ptr;
+
+	ptr = *env;
+	while (ptr)
+	{
+		if(ft_strcmp(ptr->key, key) == 0)
+			return (E_TRUE);
+		ptr = ptr->next;
+	}
+	return (env_set(env, key, NULL));
 }

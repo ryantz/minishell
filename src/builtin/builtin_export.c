@@ -40,7 +40,7 @@ static void	export_one(t_env **env, char *arg)
 	{
 		key = ft_substr(arg, 0, eq - arg);
 		if (key)
-			env_set(env, key, eq + 1);
+			env_set(env, key, ft_strdup(eq + 1));
 		free(key);
 	}
 	else

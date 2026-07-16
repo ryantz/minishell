@@ -1,6 +1,7 @@
 #include "minishell.h"
 
 static char	*find_executable(char *cmd, t_env *env);
+void	exec_cmd(t_cmd *cmd, t_env *env);
 
 void	child_exec(t_cmd *cmd, int prev_fd, int *pipe_fd, t_env *env)
 {

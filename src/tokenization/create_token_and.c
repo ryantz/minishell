@@ -1,6 +1,18 @@
 #include "minishell.h"
 
-t_token	*create_redirect_append_token(char *input, size_t *i)
+t_token	*create_token(char *value, t_token_type type)
+{
+	t_token	*token;
+
+	token = malloc(sizeof(t_token));
+	token->value = ft_strdup(value);
+	token->type = type;
+	token->quotes = 0;
+	token->next = NULL;
+	return (token);
+}
+
+t_token	*create_and_token(char *input, size_t *i)
 {
 	t_token	*token;
 

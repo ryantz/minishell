@@ -51,3 +51,34 @@ void	free_env(t_env *env)
 		env = tmp;
 	}
 }
+
+void	free_cmd_list(t_cmd *cmds)
+{
+	t_cmd	*tmp;
+	size_t	i;
+
+	while (cmds)
+	{
+		tmp = cmds->next;
+		i = 0;
+		while (cmds->argv && cmds->argv[i])
+			free(cmds->argv[i++]);
+		free(cmds->argv);
+		free_redirs_local(cmds->redirs);
+		free(cmds);
+		cmds = tmp;
+	}
+}
+
+void	free_redirs_local(t_redir *redirs)
+{
+	t_redir	*tmp;
+
+	while (redirs)
+	{
+		tmp = redirs->next;
+		free(redirs->target);
+		free(redirs);
+		redirs = tmp;
+	}
+}

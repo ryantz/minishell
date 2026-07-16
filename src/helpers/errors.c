@@ -34,7 +34,7 @@ void	write_err_arg(char *cmd, char *arg)
 	write(2, ": ", 2);
 	write(2, arg, ft_strlen(arg));
 	write(2, ": ", 2);
-	write(2, strerr(errno), ft_strlen(strerror(errno)));
+	write(2, strerror(errno), ft_strlen(strerror(errno)));
 	write(2, "\n", 1);
 }
 

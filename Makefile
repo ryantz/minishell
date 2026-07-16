@@ -6,7 +6,7 @@
 #    By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/08 23:35:05 by ryatan            #+#    #+#              #
-#    Updated: 2026/07/08 16:32:01 by fkoh             ###   ########.fr        #
+#    Updated: 2026/07/16 16:55:41 by ryatan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ TOKEN_DIR = tokenization
 PAR_DIR = parsing
 PRM_DIR = prompt
 ENV_DIR = env
-BUILTIN_DIR = builtin 
+BUILTIN_DIR = builtin
 EXPAND_DIR = expansion
 EXE_DIR = executor
 
@@ -32,35 +32,50 @@ SRC =  $(SRC_DIR)/$(HLP_DIR)/errors.c \
 	   $(SRC_DIR)/$(HLP_DIR)/free.c \
 	   $(SRC_DIR)/$(HLP_DIR)/ft_strcmp.c \
 	   $(SRC_DIR)/$(HLP_DIR)/helpers.c \
-	   $(SRC_DIR)/$(HLP_DIR)/loggers.c \
-	   $(SRC_DIR)/$(PAR_DIR)/append_cmd.c \
+	   $(SRC_DIR)/$(HLP_DIR)/loggers.c 
+
+SRC += $(SRC_DIR)/$(PAR_DIR)/append_cmd.c \
 	   $(SRC_DIR)/$(PAR_DIR)/append_pipeline.c \
 	   $(SRC_DIR)/$(PAR_DIR)/append_redir.c \
-	   $(SRC_DIR)/$(PAR_DIR)/parser_free.c \
+	   $(SRC_DIR)/$(PAR_DIR)/parser_cmd.c \
 	   $(SRC_DIR)/$(PAR_DIR)/parser_outer.c \
 	   $(SRC_DIR)/$(PAR_DIR)/parser_redir.c \
-	   $(SRC_DIR)/$(PAR_DIR)/parser_cmd.c \
-	   $(SRC_DIR)/$(TOKEN_DIR)/create_token_and.c \
-	   $(SRC_DIR)/$(TOKEN_DIR)/create_token_word.c \
+	   
+SRC += $(SRC_DIR)/$(TOKEN_DIR)/create_token_and.c \
 	   $(SRC_DIR)/$(TOKEN_DIR)/create_token_word_pipe_redir.c \
-	   $(SRC_DIR)/$(TOKEN_DIR)/lexer.c \
-	   $(SRC_DIR)/$(PRM_DIR)/prompt_build.c \
+	   $(SRC_DIR)/$(TOKEN_DIR)/create_token_word.c \
+	   $(SRC_DIR)/$(TOKEN_DIR)/lexer.c
+
+SRC += $(SRC_DIR)/$(PRM_DIR)/prompt_build.c \
 	   $(SRC_DIR)/$(PRM_DIR)/prompt_loop.c \
-	   $(SRC_DIR)/$(PRM_DIR)/signal_handle.c \
-	   $(SRC_DIR)/$(ENV_DIR)/env_get.c \
+	   $(SRC_DIR)/$(PRM_DIR)/signal_handle.c
+
+SRC += $(SRC_DIR)/$(ENV_DIR)/env_get.c \
 	   $(SRC_DIR)/$(ENV_DIR)/env_list.c \
 	   $(SRC_DIR)/$(ENV_DIR)/env_set_unset.c \
 	   $(SRC_DIR)/$(ENV_DIR)/env_to_array.c \
-	   $(SRC_DIR)/$(ENV_DIR)/print_sorted_env.c \
-	   $(SRC_DIR)/$(ENV_DIR)/print_sorted_env.c \
-	   $(SRC_DIR)/$(EXPAND_DIR)/expand_build.c \
-	   $(SRC_DIR)/$(EXPAND_DIR)/expand_len.c \
-	   $(SRC_DIR)/$(EXPAND_DIR)/expand_var.c \
-	   $(SRC_DIR)/$(EXE_DIR)/builtin_dispatch.c \
-	   $(SRC_DIR)/$(EXE_DIR)/executor_exec.c \
-	   $(SRC_DIR)/test_main.c
+	   $(SRC_DIR)/$(ENV_DIR)/print_sorted_env.c
 
-OBJ = $(SRC:$(SRC_DIR)%.c=$(OBJ_DIR)/%.o)
+SRC += $(SRC_DIR)/$(EXPAND_DIR)/expand_build.c \
+	   $(SRC_DIR)/$(EXPAND_DIR)/expand_len.c \
+	   $(SRC_DIR)/$(EXPAND_DIR)/expand_var.c
+
+SRC += $(SRC_DIR)/$(EXE_DIR)/executor_exec.c \
+	   $(SRC_DIR)/$(EXE_DIR)/executor_pipeline.c \
+	   $(SRC_DIR)/$(EXE_DIR)/executor_redir.c
+
+SRC += $(SRC_DIR)/$(BUILTIN_DIR)/builtin_cd.c \
+	   $(SRC_DIR)/$(BUILTIN_DIR)/builtin_detection.c \
+	   $(SRC_DIR)/$(BUILTIN_DIR)/builtin_echo.c \
+	   $(SRC_DIR)/$(BUILTIN_DIR)/builtin_env.c \
+	   $(SRC_DIR)/$(BUILTIN_DIR)/builtin_exit.c \
+	   $(SRC_DIR)/$(BUILTIN_DIR)/builtin_export.c \
+	   $(SRC_DIR)/$(BUILTIN_DIR)/builtin_pwd.c \
+	   $(SRC_DIR)/$(BUILTIN_DIR)/builtin_unset.c
+
+SRC += $(SRC_DIR)/main.c
+
+OBJ = $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 LIBFT_DIR = libft
 

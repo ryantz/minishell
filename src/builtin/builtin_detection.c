@@ -29,5 +29,7 @@ int	exec_builtin(t_cmd *cmd, t_env **env, int last_status)
 		return (builtin_unset(cmd->argv, env));
 	if (ft_strcmp(cmd->argv[0], "env") == 0)
 		return (builtin_env(*env));
-	return (builtin_exit(cmd->argv, last_status));
+	if (ft_strcmp(cmd->argv[0], "exit") == 0)
+		return (builtin_exit(cmd->argv, last_status));
+	return (1);
 }
