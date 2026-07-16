@@ -4,7 +4,7 @@ static int		is_valid_identifier(char *str);
 static void		print_export_error(char *arg);
 static void		export_one(t_env **env, char *arg);
 
-int	builtin_export(t_env **env, char **args)
+int	builtin_export(char **args, t_env **env)
 {
 	int	i;
 	int	status;

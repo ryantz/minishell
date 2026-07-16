@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 00:17:58 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/08 14:31:41 by fkoh             ###   ########.fr       */
+/*   Updated: 2026/07/16 01:55:13 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,19 @@ void	free_token_list(t_token *token_list)
 		free(token_list->value);
 		free(token_list);
 		token_list = tmp;
+	}
+}
+
+void	free_env(t_env *env)
+{
+	t_env	*tmp;
+
+	while (env)
+	{
+		tmp = env->next;
+		free(env->key);
+		free(env->value);
+		free(env);
+		env = tmp;
 	}
 }
