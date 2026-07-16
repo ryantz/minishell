@@ -22,7 +22,7 @@ int	builtin_exit(char **argv, int last_status)
 		write_err("exit: too many arguments");
 		return (1);
 	}
-	if (argv[1] && !is_numeric(argv[1]))
+	if (argv[1] && is_numeric(argv[1]) == E_FALSE)
 	{
 		write_err("exit: numeric argument required");
 		exit(2);

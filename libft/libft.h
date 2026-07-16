@@ -15,7 +15,7 @@
 
 # include <stdlib.h>
 # include <unistd.h>
-# include <bsd/string.h> // remove
+//# include <bsd/string.h> // remove
 # include <ctype.h> // remove
 # include <stdio.h> // remove
 # include <limits.h> // remove

@@ -22,8 +22,10 @@ int	run_pipeline(t_pipeline *pipeline, t_env *env)
 	int		fd[2];
 	pid_t	last_pid;
 
-	prev_fd = -1;
 	cmd = pipeline->cmds;
+	if (!cmd->next && is_builtin(cmd->argv[0]) == E_TRUE)
+		return (exec_builtin(cmd, &env, 0));
+	prev_fd = -1;
 	while (cmd)
 	{
 		if (cmd->next && pipe(fd) == -1)

@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h> //added this line because error, might replace the entire chunk with minishell.h
 #include <signal.h>
 #include <unistd.h>
 #include <readline/readline.h>

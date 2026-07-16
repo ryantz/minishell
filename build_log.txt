@@ -1,0 +1,79 @@
+mkdir -p build/helpers/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/helpers/errors.c -o build/helpers/errors.o
+mkdir -p build/helpers/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/helpers/free_pipeline.c -o build/helpers/free_pipeline.o
+mkdir -p build/helpers/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/helpers/free.c -o build/helpers/free.o
+mkdir -p build/helpers/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/helpers/ft_strcmp.c -o build/helpers/ft_strcmp.o
+mkdir -p build/helpers/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/helpers/helpers.c -o build/helpers/helpers.o
+mkdir -p build/helpers/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/helpers/loggers.c -o build/helpers/loggers.o
+mkdir -p build/parsing/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/parsing/append_cmd.c -o build/parsing/append_cmd.o
+mkdir -p build/parsing/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/parsing/append_pipeline.c -o build/parsing/append_pipeline.o
+mkdir -p build/parsing/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/parsing/append_redir.c -o build/parsing/append_redir.o
+mkdir -p build/parsing/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/parsing/parser_cmd.c -o build/parsing/parser_cmd.o
+mkdir -p build/parsing/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/parsing/parser_outer.c -o build/parsing/parser_outer.o
+mkdir -p build/parsing/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/parsing/parser_redir.c -o build/parsing/parser_redir.o
+mkdir -p build/tokenization/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/tokenization/create_token_and.c -o build/tokenization/create_token_and.o
+mkdir -p build/tokenization/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/tokenization/create_token_word_pipe_redir.c -o build/tokenization/create_token_word_pipe_redir.o
+mkdir -p build/tokenization/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/tokenization/create_token_word.c -o build/tokenization/create_token_word.o
+mkdir -p build/tokenization/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/tokenization/lexer.c -o build/tokenization/lexer.o
+mkdir -p build/prompt/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/prompt/prompt_build.c -o build/prompt/prompt_build.o
+mkdir -p build/prompt/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/prompt/prompt_loop.c -o build/prompt/prompt_loop.o
+mkdir -p build/prompt/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/prompt/signal_handle.c -o build/prompt/signal_handle.o
+mkdir -p build/env/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/env/env_get.c -o build/env/env_get.o
+mkdir -p build/env/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/env/env_list.c -o build/env/env_list.o
+mkdir -p build/env/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/env/env_set_unset.c -o build/env/env_set_unset.o
+mkdir -p build/env/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/env/env_to_array.c -o build/env/env_to_array.o
+mkdir -p build/env/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/env/print_sorted_env.c -o build/env/print_sorted_env.o
+mkdir -p build/expansion/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/expansion/expand_build.c -o build/expansion/expand_build.o
+mkdir -p build/expansion/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/expansion/expand_len.c -o build/expansion/expand_len.o
+mkdir -p build/expansion/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/expansion/expand_var.c -o build/expansion/expand_var.o
+mkdir -p build/executor/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/executor/executor_exec.c -o build/executor/executor_exec.o
+mkdir -p build/executor/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/executor/executor_pipeline.c -o build/executor/executor_pipeline.o
+mkdir -p build/executor/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/executor/executor_redir.c -o build/executor/executor_redir.o
+mkdir -p build/builtin/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/builtin/builtin_cd.c -o build/builtin/builtin_cd.o
+mkdir -p build/builtin/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/builtin/builtin_detection.c -o build/builtin/builtin_detection.o
+mkdir -p build/builtin/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/builtin/builtin_echo.c -o build/builtin/builtin_echo.o
+mkdir -p build/builtin/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/builtin/builtin_env.c -o build/builtin/builtin_env.o
+mkdir -p build/builtin/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/builtin/builtin_exit.c -o build/builtin/builtin_exit.o
+mkdir -p build/builtin/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/builtin/builtin_export.c -o build/builtin/builtin_export.o
+mkdir -p build/builtin/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/builtin/builtin_pwd.c -o build/builtin/builtin_pwd.o
+mkdir -p build/builtin/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/builtin/builtin_unset.c -o build/builtin/builtin_unset.o
+mkdir -p build/
+cc -Wall -Wextra -Werror -Iincludes -Ilibft -I/opt/homebrew/opt/readline/include -c src/main.c -o build/main.o
+cc -Wall -Wextra -Werror build/helpers/errors.o build/helpers/free_pipeline.o build/helpers/free.o build/helpers/ft_strcmp.o build/helpers/helpers.o build/helpers/loggers.o build/parsing/append_cmd.o build/parsing/append_pipeline.o build/parsing/append_redir.o build/parsing/parser_cmd.o build/parsing/parser_outer.o build/parsing/parser_redir.o build/tokenization/create_token_and.o build/tokenization/create_token_word_pipe_redir.o build/tokenization/create_token_word.o build/tokenization/lexer.o build/prompt/prompt_build.o build/prompt/prompt_loop.o build/prompt/signal_handle.o build/env/env_get.o build/env/env_list.o build/env/env_set_unset.o build/env/env_to_array.o build/env/print_sorted_env.o build/expansion/expand_build.o build/expansion/expand_len.o build/expansion/expand_var.o build/executor/executor_exec.o build/executor/executor_pipeline.o build/executor/executor_redir.o build/builtin/builtin_cd.o build/builtin/builtin_detection.o build/builtin/builtin_echo.o build/builtin/builtin_env.o build/builtin/builtin_exit.o build/builtin/builtin_export.o build/builtin/builtin_pwd.o build/builtin/builtin_unset.o build/main.o libft/libft.a -L/opt/homebrew/opt/readline/lib -lreadline -o minishell

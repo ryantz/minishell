@@ -45,6 +45,23 @@ static int	handle_eof(int last_status)
 	return (last_status);
 }
 
+static int	run_all_pipelines(t_pipeline *pipeline, t_env **env)
+{
+	int	status;
+
+	status = 0;
+	while (pipeline)
+	{
+		status = run_pipeline(pipeline, *env);
+		if (pipeline->link_to_next == L_AND && status != 0)
+			break ;
+		if (pipeline->link_to_next == L_OR && status == 0)
+			break ;
+		pipeline = pipeline->next;
+	}
+	return (status);
+}
+
 static int	process_line(char *line, t_env **env, int last_status)
 {
 	t_token		*token_list;
@@ -60,7 +77,7 @@ static int	process_line(char *line, t_env **env, int last_status)
 		write_err("syntax error");
 		return (2);
 	}
-	last_status = run_pipeline(pipelines, *env);
+	last_status = run_all_pipelines(pipelines, env);
 	free_pipelines(pipelines);
 	return (last_status);
 }
