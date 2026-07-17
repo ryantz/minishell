@@ -12,12 +12,15 @@
 
 #include "minishell.h"
 
-int	builtin_pwd(void)
+int	builtin_pwd(t_env *env)
 {
+	char	*pwd;
 	char	cwd[PATH_BUFFER];
 
+	pwd = env_get(env, "PWD");
+	if (pwd)
+		return (ft_putendl_fd(pwd, STDOUT_FILENO), 0);
 	if (!getcwd(cwd, PATH_BUFFER))
 		return (1);
-	ft_putendl_fd(cwd, STDOUT_FILENO);
-	return (0);
+	return (ft_putendl_fd(cwd, STDOUT_FILENO), 0);
 }

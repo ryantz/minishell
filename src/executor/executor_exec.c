@@ -17,6 +17,8 @@ void	exec_cmd(t_cmd *cmd, t_env *env);
 
 void	child_exec(t_cmd *cmd, int prev_fd, int *pipe_fd, t_env *env)
 {
+	t_env	*local_env;
+
 	if (prev_fd != -1)
 	{
 		dup2(prev_fd, STDIN_FILENO);
@@ -30,6 +32,11 @@ void	child_exec(t_cmd *cmd, int prev_fd, int *pipe_fd, t_env *env)
 	}
 	if (apply_redirs(cmd->redirs) == E_FALSE)
 		exit(1);
+	if (is_builtin(cmd->argv[0]) == E_TRUE)
+	{
+		local_env = env;
+		exit(exec_builtin(cmd, &local_env, 1));
+	}
 	exec_cmd(cmd, env);
 }
 

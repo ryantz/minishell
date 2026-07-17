@@ -199,9 +199,9 @@ void		free_env(t_env *env);
 //builtins
 t_status	is_builtin(char *cmd_name);
 int			exec_builtin(t_cmd *cmd, t_env **env, int last_status);
-int	builtin_cd(char **argv, t_env **env);
+int			builtin_cd(char **argv, t_env **env);
 int			builtin_echo(char **argv);
-int			builtin_pwd(void);
+int			builtin_pwd(t_env *env);
 int			builtin_export(char **argv, t_env **env);
 int			builtin_unset(char **argv, t_env **env);
 int			builtin_env(t_env *env);
@@ -212,7 +212,7 @@ void		print_sorted_env(t_env *env);
 void		init_signals(void);
 void		sigint_handler(int sig);
 
-int	run_pipeline(t_pipeline *pipeline, t_env *env);
+int	run_pipeline(t_pipeline *pipeline, t_env **env);
 
 int	expand_calc_len(char *str, t_env *env, int exit_status);
 int	expand_is_var_start(char *str, int i);

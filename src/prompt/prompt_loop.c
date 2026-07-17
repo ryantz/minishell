@@ -13,8 +13,9 @@
 #include "minishell.h"
 
 static int	process_line(char *line, t_env **env, int last_status);
-static int	handle_eof(int last_status);
+static int	handle_eof(int last_status, int interactive);
 static char	*next_line(const char *prompt, int interactive);
+static int	run_all_pipelines(t_pipeline *pipeline, t_env **env);
 
 int	prompt_loop(const char *prompt, t_env **env)
 {
@@ -24,12 +25,12 @@ int	prompt_loop(const char *prompt, t_env **env)
 
 	init_signals();
 	last_status = 0;
-	interactive = isatty(STDIN_FILENO); //this was added
+	interactive = isatty(STDIN_FILENO);
 	while (1)
 	{
 		rl_return = next_line(prompt, interactive);
 		if (!rl_return)
-			return (handle_eof(last_status));
+			return (handle_eof(last_status, interactive));
 		if (*rl_return == '\0')
 		{
 			free(rl_return);
@@ -43,6 +44,13 @@ int	prompt_loop(const char *prompt, t_env **env)
 	return (last_status);
 }
 
+static int	handle_eof(int last_status, int interactive)
+{
+	if (interactive)
+		ft_putendl_fd("exit", STDOUT_FILENO);
+	return (last_status);
+}
+
 static char	*next_line(const char *prompt, int interactive)
 {
 	if (interactive)
@@ -50,24 +58,23 @@ static char	*next_line(const char *prompt, int interactive)
 	return (read_line_stdin());
 }
 
-static int	handle_eof(int last_status)
-{
-	ft_putendl_fd("exit", STDOUT_FILENO);
-	return (last_status);
-}
-
 static int	run_all_pipelines(t_pipeline *pipeline, t_env **env)
 {
 	int	status;
+	int	skip;
 
 	status = 0;
+	skip = 0;
 	while (pipeline)
 	{
-		status = run_pipeline(pipeline, *env);
-		if (pipeline->link_to_next == L_AND && status != 0)
-			break ;
-		if (pipeline->link_to_next == L_OR && status == 0)
-			break ;
+		if (!skip)
+			status = run_pipeline(pipeline, env);
+		if (pipeline->link_to_next == L_AND)
+			skip = (status != 0);
+		else if (pipeline->link_to_next == L_OR)
+			skip = (status == 0);
+		else
+			skip = 0;
 		pipeline = pipeline->next;
 	}
 	return (status);
