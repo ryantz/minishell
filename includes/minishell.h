@@ -141,6 +141,11 @@ int 		ft_strcmp(const char *s1, const char *s2);
 int			prompt_loop(const char *prompt, t_env **env);
 
 char		*prompt_build(t_prompt *machine_info);
+char		*read_line_stdin(void);
+int			find_newline(char *stash);
+char		*append_buf(char *stash, char *buf);
+char		*extract_line(char *stash, int nl);
+char		*extract_remainder(char *stash, int nl);
 
 //lexer
 t_token		*create_token_list(char *input, t_env *env, int status);

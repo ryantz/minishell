@@ -48,7 +48,7 @@ static t_status	is_valid_env_key(char *key)
 	i = 1;
 	while (key[i])
 	{
-		if (!key || (!ft_isalnum(key[i]) && key[i] != '_'))
+		if ((!ft_isalnum(key[i]) && key[i] != '_'))
 			return (E_FALSE);
 		i++;
 	}

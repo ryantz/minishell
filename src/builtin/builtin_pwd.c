@@ -18,6 +18,6 @@ int	builtin_pwd(void)
 
 	if (!getcwd(cwd, PATH_BUFFER))
 		return (1);
-	printf("%s\n", cwd);
+	ft_putendl_fd(cwd, STDOUT_FILENO);
 	return (0);
 }

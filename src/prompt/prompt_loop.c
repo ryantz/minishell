@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 00:18:13 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/15 18:38:51 by fkoh             ###   ########.fr       */
+/*   Updated: 2026/07/17 00:00:00 by fkoh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,20 @@
 
 static int	process_line(char *line, t_env **env, int last_status);
 static int	handle_eof(int last_status);
+static char	*next_line(const char *prompt, int interactive);
 
 int	prompt_loop(const char *prompt, t_env **env)
 {
 	char	*rl_return;
 	int		last_status;
+	int		interactive;
 
 	init_signals();
 	last_status = 0;
+	interactive = isatty(STDIN_FILENO); //this was added
 	while (1)
 	{
-		rl_return = readline(prompt);
+		rl_return = next_line(prompt, interactive);
 		if (!rl_return)
 			return (handle_eof(last_status));
 		if (*rl_return == '\0')
@@ -32,16 +35,24 @@ int	prompt_loop(const char *prompt, t_env **env)
 			free(rl_return);
 			continue ;
 		}
-		add_history(rl_return);
+		if (interactive)
+			add_history(rl_return);
 		last_status = process_line(rl_return, env, last_status);
 		free(rl_return);
 	}
 	return (last_status);
 }
 
+static char	*next_line(const char *prompt, int interactive)
+{
+	if (interactive)
+		return (readline(prompt));
+	return (read_line_stdin());
+}
+
 static int	handle_eof(int last_status)
 {
-	printf("exit\n");
+	ft_putendl_fd("exit", STDOUT_FILENO);
 	return (last_status);
 }
 

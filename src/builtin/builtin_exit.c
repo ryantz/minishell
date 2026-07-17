@@ -16,7 +16,7 @@ int	builtin_exit(char **argv, int last_status)
 {
 	long	code;
 
-	printf("exit\n");
+	ft_putendl_fd("exit", STDOUT_FILENO);
 	if (argv[1] && argv[2])
 	{
 		write_err("exit: too many arguments");

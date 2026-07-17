@@ -12,14 +12,14 @@
 
 NAME = minishell
 COMPILER = cc
-#READLINE_PREFIX = $(shell brew --prefix readline 2>/dev/null)
-#INCLUDE = -Iincludes -Ilibft -I$(READLINE_PREFIX)/include
-#CFLAGS = -Wall -Wextra -Werror
-#EXT_LIBS = -L$(READLINE_PREFIX)/lib -lreadline
-# from readline_prefix to ext_libs is for Apple Silicon
-INCLUDE = -Iincludes -Ilibft
+READLINE_PREFIX = $(shell brew --prefix readline 2>/dev/null)
+INCLUDE = -Iincludes -Ilibft -I$(READLINE_PREFIX)/include
 CFLAGS = -Wall -Wextra -Werror
-EXT_LIBS = -lreadline
+EXT_LIBS = -L$(READLINE_PREFIX)/lib -lreadline
+# # from readline_prefix to ext_libs is for Apple Silicon
+# INCLUDE = -Iincludes -Ilibft
+# CFLAGS = -Wall -Wextra -Werror
+# EXT_LIBS = -lreadline
 
 OBJ_DIR = build
 SRC_DIR = src
@@ -53,7 +53,9 @@ SRC += $(SRC_DIR)/$(TOKEN_DIR)/create_token_and.c \
 
 SRC += $(SRC_DIR)/$(PRM_DIR)/prompt_build.c \
 	   $(SRC_DIR)/$(PRM_DIR)/prompt_loop.c \
-	   $(SRC_DIR)/$(PRM_DIR)/signal_handle.c
+	   $(SRC_DIR)/$(PRM_DIR)/signal_handle.c \
+	   $(SRC_DIR)/$(PRM_DIR)/read_line.c \
+	   $(SRC_DIR)/$(PRM_DIR)/read_line_utils.c \
 
 SRC += $(SRC_DIR)/$(ENV_DIR)/env_get.c \
 	   $(SRC_DIR)/$(ENV_DIR)/env_list.c \
