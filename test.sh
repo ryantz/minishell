@@ -17,6 +17,16 @@
 # (run_test), or against a literal string you supply yourself (run_test_raw
 # and run_test_status_only), for cases where bash's own wording isn't a fair
 # reference (e.g. custom "command not found" / cd error messages).
+#
+# COVERAGE NOTE: this harness feeds minishell via a plain pipe, which has no
+# controlling TTY. That means anything relying on real terminal signal
+# generation (Ctrl-C / Ctrl-\ turning into SIGINT/SIGQUIT via the line
+# discipline's ISIG processing) or on readline's interactive history
+# (Up/Down arrow recall) cannot be exercised this way — a raw 0x03/0x1c byte
+# on a pipe is just data, not a signal. Those items are listed at the bottom
+# as a manual checklist instead of being faked with something unreliable.
+# Ctrl-D (EOF) *is* testable here, since EOF-on-read is exactly what closing
+# the piped stdin produces, regardless of TTY.
 # ==============================================================================
 
 set -u
@@ -211,32 +221,154 @@ run_test_status_only() {
 	fi
 }
 
+# run_test_process_exit <name> <input_block> <bash_reference_command>
+#
+# For cases where the tested command terminates the shell itself (e.g. the
+# `exit` builtin actually exiting) — the marker-based capture() can't be used
+# here because "echo END:$?" and the trailing "exit" appended by capture()
+# would never run. Instead this feeds input_block directly and compares the
+# *process's own* exit code against bash -c's own exit code for the same
+# script, which is the correct analogue (bash -c's exit status IS whatever
+# "exit N" inside it produced).
+run_test_process_exit() {
+	local name="$1" input_block="$2" ref_cmd="$3"
+	local actual_code bash_code
+
+	printf '%s\n' "$input_block" | "$MINISHELL" > /dev/null 2>&1
+	actual_code=$?
+
+	bash -c "$ref_cmd" > /dev/null 2>&1
+	bash_code=$?
+
+	if [ "$actual_code" == "$bash_code" ]; then
+		report_pass "$name (process exit code $actual_code)"
+	else
+		report_fail "$name" "$input_block" \
+			"process exit code $bash_code" "process exit code $actual_code"
+	fi
+}
+
 # ==============================================================================
 # TEST SUITE
 # ==============================================================================
 
-echo -e "${CYAN}${BOLD}==> echo${RESET}"
+echo -e "${CYAN}${BOLD}==> simple commands & empty input${RESET}"
+run_test "absolute path simple command" '/bin/ls /tmp' '/bin/ls /tmp'
+run_test "empty command line produces no output, status unchanged" \
+	$'true\n' 'true'
+run_test "line with only spaces produces no output" \
+	$'true\n   ' 'true;   '
+run_test "line with only tabs produces no output" \
+	$'true\n\t\t' $'true;\t\t'
+
+echo -e "\n${CYAN}${BOLD}==> arguments${RESET}"
+run_test "command with multiple arguments" '/bin/ls -l -a /tmp' '/bin/ls -l -a /tmp'
+run_test "command with one argument, no path lookup needed" 'wc -l /etc/hostname' 'wc -l /etc/hostname'
+
+echo -e "\n${CYAN}${BOLD}==> echo${RESET}"
 run_test "echo simple"                 'echo hello world'  'echo hello world'
 run_test "echo -n suppresses newline"  'echo -n hello'     'echo -n hello'
 run_test "echo no args"                'echo'              'echo'
 run_test "echo collapses shell-level spacing" 'echo a   b   c' 'echo a b c'
 
+echo -e "\n${CYAN}${BOLD}==> exit${RESET}"
+run_test_process_exit "exit with no args uses last status" \
+	$'false\nexit' $'false\nexit'
+run_test_process_exit "exit with numeric arg" \
+	'exit 42' 'exit 42'
+run_test_process_exit "exit with out-of-range numeric arg wraps mod 256" \
+	'exit 300' 'exit 300'
+run_test_process_exit "exit with non-numeric arg errors and exits" \
+	'exit abc' 'exit abc'
+run_test_status_only "exit with too many arguments does not exit, sets status" \
+	'exit 1 2' 'exit 1 2'
+run_test "shell survives exit with too many arguments and keeps running" \
+	$'exit 1 2\necho still_alive' $'exit 1 2; echo still_alive'
+
+echo -e "\n${CYAN}${BOLD}==> EOF (Ctrl-D) handling${RESET}"
+# A closed/empty pipe stdin delivers EOF to read() exactly like Ctrl-D does
+# at an empty interactive prompt — this part is genuinely testable headless.
+eof_code=$(printf '' | timeout 2 "$MINISHELL" > /dev/null 2>&1; echo $?)
+if [ "$eof_code" == "0" ]; then
+	report_pass "EOF on empty prompt exits minishell cleanly (status 0)"
+elif [ "$eof_code" == "124" ]; then
+	report_fail "EOF on empty prompt exits minishell cleanly" \
+		"(empty stdin, immediate EOF)" "exit status 0, no hang" \
+		"timed out after 2s — shell is hanging on EOF instead of exiting"
+else
+	report_fail "EOF on empty prompt exits minishell cleanly" \
+		"(empty stdin, immediate EOF)" "exit status 0" "exit status $eof_code"
+fi
+
+eof_partial_code=$(printf 'cd /tmp' | timeout 2 "$MINISHELL" > /dev/null 2>&1; echo $?)
+if [ "$eof_partial_code" == "0" ]; then
+	report_pass "EOF after a command with no trailing newline still exits cleanly"
+elif [ "$eof_partial_code" == "124" ]; then
+	report_fail "EOF after a command with no trailing newline still exits cleanly" \
+		"(cd /tmp, no trailing newline, then EOF)" "exit status 0, no hang" \
+		"timed out after 2s — shell is hanging"
+else
+	report_fail "EOF after a command with no trailing newline still exits cleanly" \
+		"(cd /tmp, no trailing newline, then EOF)" "exit status 0" "exit status $eof_partial_code"
+fi
+
 echo -e "\n${CYAN}${BOLD}==> pwd${RESET}"
 run_test "pwd prints cwd" 'pwd' 'pwd'
+run_test "pwd after cd reflects new directory" $'cd /tmp\npwd' 'cd /tmp && pwd'
 
 echo -e "\n${CYAN}${BOLD}==> cd${RESET}"
 run_test "cd absolute path then pwd" $'cd /tmp\npwd' 'cd /tmp && pwd'
 run_test "cd relative path then pwd" $'cd /\ncd tmp\npwd' 'cd / && cd tmp && pwd'
+run_test "cd . stays in same directory" $'cd /tmp\ncd .\npwd' 'cd /tmp && cd . && pwd'
+run_test "cd .. moves up a directory" $'cd /tmp\ncd ..\npwd' 'cd /tmp && cd .. && pwd'
 run_test_status_only "cd nonexistent dir fails with status 1" \
 	'cd /no/such/dir/xyz' 'cd /no/such/dir/xyz'
 run_test "cd - returns to OLDPWD and echoes it" \
 	$'cd /tmp\ncd /\ncd -\npwd' 'cd /tmp && cd / && cd - && pwd'
+
+echo -e "\n${CYAN}${BOLD}==> relative paths${RESET}"
+mkdir -p "$TMP_DIR/reldir/nested"
+cat > "$TMP_DIR/reldir/hello.sh" <<'EOS'
+#!/bin/sh
+echo hello_from_relative
+EOS
+chmod +x "$TMP_DIR/reldir/hello.sh"
+run_test "execute via simple relative path" \
+	"cd $TMP_DIR/reldir
+./hello.sh" \
+	"cd $TMP_DIR/reldir && ./hello.sh"
+run_test "execute via complex relative path with multiple .." \
+	"cd $TMP_DIR/reldir/nested
+../../reldir/nested/../hello.sh" \
+	"cd $TMP_DIR/reldir/nested && ../../reldir/nested/../hello.sh"
 
 echo -e "\n${CYAN}${BOLD}==> exit status (\$?)${RESET}"
 run_test "successful external command status 0" 'ls /tmp' 'ls /tmp'
 run_test "failing external command status nonzero" \
 	$'ls /no/such/dir\necho $?' 'ls /no/such/dir; echo $?'
 run_test "cd success then \$? reflects it" $'cd /tmp\necho $?' 'cd /tmp; echo $?'
+run_test "\$? used twice in one command (expr \$? + \$?)" \
+	$'ls /no/such/dir_xyz\nexpr $? + $?' 'ls /no/such/dir_xyz; expr $? + $?'
+
+echo -e "\n${CYAN}${BOLD}==> environment path (\$PATH)${RESET}"
+pathdir1="$TMP_DIR/pathbin1"
+pathdir2="$TMP_DIR/pathbin2"
+mkdir -p "$pathdir1" "$pathdir2"
+cat > "$pathdir1/mytool" <<'EOS'
+#!/bin/sh
+echo from_dir1
+EOS
+cat > "$pathdir2/mytool" <<'EOS'
+#!/bin/sh
+echo from_dir2
+EOS
+chmod +x "$pathdir1/mytool" "$pathdir2/mytool"
+run_test "PATH order: left directory takes priority" \
+	"export PATH=$pathdir1:$pathdir2:\$PATH
+mytool" \
+	"export PATH=$pathdir1:$pathdir2:\$PATH && mytool"
+run_test_status_only "unset PATH makes external commands fail" \
+	$'unset PATH\nls /tmp' 'unset PATH; ls /tmp'
 
 echo -e "\n${CYAN}${BOLD}==> environment: export / unset / env${RESET}"
 run_test "export then echo expands var" \
@@ -245,19 +377,40 @@ run_test "unset removes var" \
 	$'export FOO=bar\nunset FOO\necho $FOO' 'export FOO=bar; unset FOO; echo $FOO'
 run_test "export no value creates bare var (visible via export -p)" \
 	$'export BARE\nexport | grep BARE' 'export BARE; export | grep BARE'
+run_test "env shows exported variable" \
+	$'export FOO=bar\nenv | grep ^FOO=' 'export FOO=bar; env | grep ^FOO='
+run_test "unset then env no longer shows variable" \
+	$'export FOO=bar\nunset FOO\nenv | grep ^FOO=' \
+	'export FOO=bar; unset FOO; env | grep ^FOO='
 
 echo -e "\n${CYAN}${BOLD}==> quoting${RESET}"
 run_test "single quotes prevent expansion" \
 	$'export FOO=bar\necho '"'"'$FOO'"'" 'export FOO=bar; echo '"'"'$FOO'"'"
+run_test "single quotes with empty argument" \
+	"echo ''" "echo ''"
+run_test "single quotes preserve pipes and redirection chars literally" \
+	"echo 'a | b > c'" "echo 'a | b > c'"
 run_test "double quotes still expand" \
 	$'export FOO=bar\necho "$FOO"' 'export FOO=bar; echo "$FOO"'
 run_test "quotes concatenate with bare word" \
 	'echo hel"lo wor"ld' 'echo hel"lo wor"ld'
 
+echo -e "\n${CYAN}${BOLD}==> environment variables${RESET}"
+run_test "echo \$USER expands to current user" \
+	$'export USER=testuser\necho $USER' 'export USER=testuser; echo $USER'
+run_test "echo \"\$USER\" expands inside double quotes" \
+	$'export USER=testuser\necho "$USER"' 'export USER=testuser; echo "$USER"'
+
 echo -e "\n${CYAN}${BOLD}==> pipes${RESET}"
 run_test "two-stage pipe" 'echo hello | cat' 'echo hello | cat'
 run_test "three-stage pipe with wc" \
 	$'echo -e "a\\nb\\nc" | cat | wc -l' 'echo -e "a\nb\nc" | cat | wc -l'
+run_test_status_only "wrong command inside pipe chain does not crash" \
+	'ls /no/such/dir/xyz | grep bla | wc -l' 'ls /no/such/dir/xyz | grep bla | wc -l'
+run_test "safe stand-in for 'cat | cat | ls' using piped data, not a blocking read" \
+	$'echo piped_data | cat | cat | wc -l' 'echo piped_data | cat | cat | wc -l'
+run_test "long command with many arguments" \
+	"echo $(seq 1 100 | tr '\n' ' ')" "echo $(seq 1 100 | tr '\n' ' ')"
 
 echo -e "\n${CYAN}${BOLD}==> redirections${RESET}"
 out1="$TMP_DIR/out1.txt"
@@ -277,10 +430,28 @@ run_test "input redirection" \
 	"$(printf 'echo fromfile > %s\ncat < %s' "$in1" "$in1")" \
 	"echo fromfile > $in1; cat < $in1"
 
+out3="$TMP_DIR/out3.txt"
+out3_ref="$TMP_DIR/out3_ref.txt"
+run_test "repeated > redirection truncates each time, doesn't accumulate" \
+	"$(printf 'echo first > %s\necho second > %s\ncat %s' "$out3" "$out3" "$out3")" \
+	"echo first > $out3_ref; echo second > $out3_ref; cat $out3_ref"
+
+out4="$TMP_DIR/out4.txt"
+out4_ref="$TMP_DIR/out4_ref.txt"
+run_test "pipe output redirected to a file" \
+	"$(printf 'echo hello | cat > %s\ncat %s' "$out4" "$out4")" \
+	"echo hello | cat > $out4_ref; cat $out4_ref"
+
 echo -e "\n${CYAN}${BOLD}==> heredoc${RESET}"
 run_test "heredoc feeds cat until delimiter" \
 	$'cat << EOF\nline one\nline two\nEOF' \
 	$'cat << EOF\nline one\nline two\nEOF'
+run_test "heredoc with variable expansion (unquoted delimiter)" \
+	$'export FOO=bar\ncat << EOF\nvalue is $FOO\nEOF' \
+	$'export FOO=bar\ncat << EOF\nvalue is $FOO\nEOF'
+run_test "heredoc with quoted delimiter suppresses expansion" \
+	$'export FOO=bar\ncat << '"'"'EOF'"'"'\nvalue is $FOO\nEOF' \
+	$'export FOO=bar\ncat << '"'"'EOF'"'"'\nvalue is $FOO\nEOF'
 
 echo -e "\n${CYAN}${BOLD}==> command not found${RESET}"
 # bash's own "command not found" wording differs from a custom minishell's;
@@ -294,6 +465,9 @@ run_test_raw "unknown command reports not found, status 127" \
 run_test_raw "\$? is 127 right after command-not-found" \
 	$'thiscommanddoesnotexist123\necho $?' \
 	$'thiscommanddoesnotexist123: command not found\n127\n0'
+run_test_raw "unknown command inside a longer script doesn't crash the shell" \
+	$'dsbksdgbksdghsd\necho survived' \
+	$'dsbksdgbksdghsd: command not found\nsurvived\n0'
 
 # ------------------------------------------------------------------------
 # BONUS: && / || with parentheses, wildcards
@@ -325,6 +499,43 @@ run_test "bare wildcard expands all entries" \
 echo *" \
 	"cd $TMP_DIR/wctest && echo *"
 
+echo -e "\n${CYAN}${BOLD}==> bonus: surprise (nested quote interpolation)${RESET}"
+# echo "'$USER'"  -> double quotes still expand $USER; the single quote
+# characters inside are just literal characters, not real quoting.
+surprise_line1="echo \"'\$USER'\""
+run_test "echo \"'\$USER'\" expands USER, quotes stay literal" \
+	$'export USER=testuser\n'"$surprise_line1" \
+	"export USER=testuser; $surprise_line1"
+
+# echo '"$USER"'  -> single quotes suppress everything, prints literally.
+surprise_line2="echo '\"\$USER\"'"
+run_test "echo '\"\$USER\"' prints literally, no expansion" \
+	$'export USER=testuser\n'"$surprise_line2" \
+	"export USER=testuser; $surprise_line2"
+
+# ==============================================================================
+# MANUAL-ONLY CHECKLIST (cannot be automated without a real/pseudo TTY)
+# ==============================================================================
+#
+# The items below require actual terminal signal generation (ISIG) or
+# readline's interactive history recall, neither of which exist on a plain
+# piped stdin. Run these by hand with $MINISHELL in a real terminal:
+#
+#   [ ] Ctrl-C on an empty prompt -> new line + new prompt, no crash
+#   [ ] Ctrl-\ on an empty prompt -> nothing happens
+#   [ ] Ctrl-C after typing a partial command -> line is cleared, new prompt,
+#       pressing Enter afterward executes nothing
+#   [ ] Ctrl-\ after typing a partial command -> nothing happens
+#   [ ] Ctrl-C while a blocking child is running (e.g. `cat` with no args,
+#       or `grep something` with no file) -> child is interrupted, shell
+#       returns to a fresh prompt, minishell itself does not exit
+#   [ ] Ctrl-\ while a blocking child is running -> same as above but via
+#       SIGQUIT; minishell itself must not exit or print anything itself
+#   [ ] Ctrl-D while a blocking child is running -> behavior matches bash
+#       (typically ends the child's stdin without killing minishell)
+#   [ ] Up/Down arrow recall previous commands via readline history
+#   [ ] Re-running a recalled history entry executes it correctly
+#
 # ==============================================================================
 # SUMMARY
 # ==============================================================================
@@ -340,5 +551,7 @@ if [ "$FAIL_COUNT" -gt 0 ]; then
 	done
 fi
 echo -e "${BOLD}==============================${RESET}"
+echo -e "${YELLOW}Note: signal (Ctrl-C/Ctrl-\\\\) and readline history behavior are"
+echo -e "not covered above — see the manual checklist in this script's source.${RESET}"
 
 [ "$FAIL_COUNT" -eq 0 ]
