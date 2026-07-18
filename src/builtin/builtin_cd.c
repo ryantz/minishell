@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 18:09:06 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/16 18:09:07 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/18 13:02:25 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 static t_status	get_target(char **target, char **argv, t_env **env);
 
-// argv[0] is cd
 int	builtin_cd(char **argv, t_env **env)
 {
 	char	*target;
@@ -55,7 +54,7 @@ static t_status	get_target(char **target, char **argv, t_env **env)
 			write_err("cd: OLDPWD not set");
 			return (E_FALSE);
 		}
-		printf("%s\n", *target);
+		ft_putendl_fd(*target, 1);
 	}
 	else
 		*target = argv[1];
