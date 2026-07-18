@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 18:10:00 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/16 18:10:01 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/18 13:27:43 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,5 +41,7 @@ static int	open_redir_fd(t_redir *redir)
 		return (open(redir->target, O_WRONLY | O_CREAT | O_TRUNC, 0644));
 	if (redir->type == R_APPEND)
 		return (open(redir->target, O_WRONLY | O_CREAT | O_APPEND, 0644));
+	if (redir->type == R_HEREDOC)
+		return (redir->fd);
 	return (-1);
 }

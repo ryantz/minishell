@@ -6,7 +6,7 @@
 #    By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/08 23:35:05 by ryatan            #+#    #+#              #
-#    Updated: 2026/07/16 16:55:41 by ryatan           ###   ########.fr        #
+#    Updated: 2026/07/18 13:53:47 by ryatan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -68,6 +68,7 @@ SRC += $(SRC_DIR)/$(EXPAND_DIR)/expand_build.c \
 	   $(SRC_DIR)/$(EXPAND_DIR)/expand_var.c
 
 SRC += $(SRC_DIR)/$(EXE_DIR)/executor_exec.c \
+	   $(SRC_DIR)/$(EXE_DIR)/executor_heredoc.c \
 	   $(SRC_DIR)/$(EXE_DIR)/executor_pipeline.c \
 	   $(SRC_DIR)/$(EXE_DIR)/executor_redir.c
 

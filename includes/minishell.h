@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/16 17:40:53 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/18 13:52:21 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ typedef struct s_redir
 {
 	t_token_type	type;
 	char			*target; //string that comes after redir operator
+	int				fd;
+	int				quoted;
 	struct s_redir	*next; //next redir in one command
 }	t_redir;
 
@@ -209,15 +211,18 @@ int			builtin_exit(char **argv, int last_status);
 void		print_sorted_env(t_env *env);
 
 //signal_handle
+extern volatile	sig_atomic_t	g_sigint_flag;
+
 void		init_signals(void);
 void		sigint_handler(int sig);
 
-int	run_pipeline(t_pipeline *pipeline, t_env **env);
+int	run_pipeline(t_pipeline *pipeline, t_env **env, int last_status);
 
 int	expand_calc_len(char *str, t_env *env, int exit_status);
 int	expand_is_var_start(char *str, int i);
 char	*expand_get_value(char *str, int *i, t_env *env, int exit_status);
 
+t_status	read_heredocs(t_redir *redirs, t_env *env, int exit_status);
 t_status	apply_redirs(t_redir *redirs);
 void	child_exec(t_cmd *cmd, int prev_fd, int *pipe_fd, t_env *env);
 

@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/08 16:14:11 by fkoh              #+#    #+#             */
-/*   Updated: 2026/07/16 00:48:10 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/18 13:26:48 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,12 @@ t_status	add_redir(t_cmd *cmd, t_token **cursor)
 	if (!redir)
 		return (E_FALSE);
 	redir->type = (*cursor)->type;
+	redir->fd = -1;
 	*cursor = (*cursor)->next;
 	if (!*cursor || (*cursor)->type != WORD)
 		return (free(redir), E_FALSE);
 	redir->target = ft_strdup((*cursor)->value);
+	redir->quoted = (*cursor)->quotes;
 	redir->next = NULL;
 	*cursor = (*cursor)->next;
 	append_redir(cmd, redir);

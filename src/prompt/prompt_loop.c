@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 00:18:13 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/17 00:00:00 by fkoh             ###   ########.fr       */
+/*   Updated: 2026/07/18 13:48:22 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 static int	process_line(char *line, t_env **env, int last_status);
 static int	handle_eof(int last_status, int interactive);
 static char	*next_line(const char *prompt, int interactive);
-static int	run_all_pipelines(t_pipeline *pipeline, t_env **env);
+static int	run_all_pipelines(t_pipeline *pipeline, t_env **env,
+		int last_status);
 
 int	prompt_loop(const char *prompt, t_env **env)
 {
@@ -58,17 +59,18 @@ static char	*next_line(const char *prompt, int interactive)
 	return (read_line_stdin());
 }
 
-static int	run_all_pipelines(t_pipeline *pipeline, t_env **env)
+static int	run_all_pipelines(t_pipeline *pipeline, t_env **env,
+		int last_status)
 {
 	int	status;
 	int	skip;
 
-	status = 0;
+	status = last_status;
 	skip = 0;
 	while (pipeline)
 	{
 		if (!skip)
-			status = run_pipeline(pipeline, env);
+			status = run_pipeline(pipeline, env, status);
 		if (pipeline->link_to_next == L_AND)
 			skip = (status != 0);
 		else if (pipeline->link_to_next == L_OR)
@@ -95,7 +97,7 @@ static int	process_line(char *line, t_env **env, int last_status)
 		write_err("syntax error");
 		return (2);
 	}
-	last_status = run_all_pipelines(pipelines, env);
+	last_status = run_all_pipelines(pipelines, env, last_status);
 	free_pipelines(pipelines);
 	return (last_status);
 }

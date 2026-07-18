@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 18:09:56 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/17 00:00:00 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/18 13:43:44 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,20 @@ static pid_t	fork_one_cmd(t_cmd *cmd, int prev_fd, int *pipe_fd, t_env *env);
 static int		wait_all_children(pid_t last_pid);
 static int		run_builtin_with_redirs(t_cmd *cmd, t_env **env);
 
-int	run_pipeline(t_pipeline *pipeline, t_env **env)
+int	run_pipeline(t_pipeline *pipeline, t_env **env, int last_status)
 {
 	t_cmd	*cmd;
 	int		prev_fd;
 	int		fd[2];
 	pid_t	last_pid;
 
+	cmd = pipeline->cmds;
+	while (cmd)
+	{
+		if (read_heredocs(cmd->redirs, *env, last_status) == E_FALSE)
+			return (1);
+		cmd = cmd->next;
+	}
 	cmd = pipeline->cmds;
 	if (!cmd->next && is_builtin(cmd->argv[0]) == E_TRUE)
 		return (run_builtin_with_redirs(cmd, env));
@@ -41,6 +48,8 @@ int	run_pipeline(t_pipeline *pipeline, t_env **env)
 		}
 		cmd = cmd->next;
 	}
+	if (prev_fd != -1)
+		close(prev_fd);
 	return (wait_all_children(last_pid));
 }
 
