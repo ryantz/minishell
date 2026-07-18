@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/18 13:52:21 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/18 22:10:57 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 # include "libft.h"
 
 # define PATH_BUFFER 1024
+# define RL_CHUNK 1024
 
 typedef enum e_status
 {
@@ -112,6 +113,23 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
+typedef struct s_heredoc_params
+{
+	int		write_fd;
+	t_redir	*redir;
+	t_env	*env;
+	int		exit_status;
+}	t_heredoc_params;
+
+typedef struct s_lexer_params
+{
+	t_env	*env;
+	int		status;
+}	t_lexer_params;
+
+//signal_handle
+extern volatile sig_atomic_t	g_sigint_flag;
+
 //errors
 void		print_error(t_error err_flag);
 t_status	error_checks(int argc, char **argv);
@@ -136,10 +154,9 @@ t_status	is_lower(char c);
 t_status	is_operator(char c);
 t_status	is_numeric(char *str);
 char		*ft_strjoin_free(char *s1, char *s2);
-int 		ft_strcmp(const char *s1, const char *s2);
+int			ft_strcmp(const char *s1, const char *s2);
 
 //prompt	
-//int			prompt_loop(const char *prompt);
 int			prompt_loop(const char *prompt, t_env **env);
 
 char		*prompt_build(t_prompt *machine_info);
@@ -163,8 +180,7 @@ t_token		*create_pipe_token(char *input, size_t *i);
 t_token		*create_redirect_delim_token(char *input, size_t *i);
 t_token		*create_redirect_append_token(char *input, size_t *i);
 
-char	*expand_segment(char *segment, t_env *env, int status);
-
+char		*expand_segment(char *segment, t_env *env, int status);
 
 //parser (outer layer: pipelines split on AND/OR)
 t_pipeline	*parse_tokens(t_token *tokens);
@@ -210,20 +226,17 @@ int			builtin_env(t_env *env);
 int			builtin_exit(char **argv, int last_status);
 void		print_sorted_env(t_env *env);
 
-//signal_handle
-extern volatile	sig_atomic_t	g_sigint_flag;
-
 void		init_signals(void);
 void		sigint_handler(int sig);
 
-int	run_pipeline(t_pipeline *pipeline, t_env **env, int last_status);
+int			run_pipeline(t_pipeline *pipeline, t_env **env, int last_status);
 
-int	expand_calc_len(char *str, t_env *env, int exit_status);
-int	expand_is_var_start(char *str, int i);
-char	*expand_get_value(char *str, int *i, t_env *env, int exit_status);
+int			expand_calc_len(char *str, t_env *env, int exit_status);
+int			expand_is_var_start(char *str, int i);
+char		*expand_get_value(char *str, int *i, t_env *env, int exit_status);
 
 t_status	read_heredocs(t_redir *redirs, t_env *env, int exit_status);
 t_status	apply_redirs(t_redir *redirs);
-void	child_exec(t_cmd *cmd, int prev_fd, int *pipe_fd, t_env *env);
+void		child_exec(t_cmd *cmd, int prev_fd, int *pipe_fd, t_env *env);
 
 #endif

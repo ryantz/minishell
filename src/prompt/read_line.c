@@ -6,13 +6,11 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 00:00:00 by fkoh              #+#    #+#             */
-/*   Updated: 2026/07/17 00:00:00 by fkoh             ###   ########.fr       */
+/*   Updated: 2026/07/18 21:57:20 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-# define RL_CHUNK 1024
 
 static char	*finish_line(char **stash, int nl)
 {

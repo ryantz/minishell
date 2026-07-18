@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 18:09:56 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/18 13:43:44 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/18 21:50:50 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,32 +15,44 @@
 static pid_t	fork_one_cmd(t_cmd *cmd, int prev_fd, int *pipe_fd, t_env *env);
 static int		wait_all_children(pid_t last_pid);
 static int		run_builtin_with_redirs(t_cmd *cmd, t_env **env);
+static pid_t	run_pipeline_cmds(t_cmd *cmd, t_env *env, int last_status);
 
 int	run_pipeline(t_pipeline *pipeline, t_env **env, int last_status)
 {
 	t_cmd	*cmd;
+	pid_t	last_pid;
+
+	cmd = pipeline->cmds;
+	if (!cmd->next && is_builtin(cmd->argv[0]) == E_TRUE)
+	{
+		if (read_heredocs(cmd->redirs, *env, last_status) == E_FALSE)
+			return (1);
+		return (run_builtin_with_redirs(cmd, env));
+	}
+	last_pid = run_pipeline_cmds(cmd, *env, last_status);
+	if (last_pid == -1)
+		return (1);
+	return (wait_all_children(last_pid));
+}
+
+static pid_t	run_pipeline_cmds(t_cmd *cmd, t_env *env, int last_status)
+{
 	int		prev_fd;
 	int		fd[2];
 	pid_t	last_pid;
 
-	cmd = pipeline->cmds;
-	while (cmd)
-	{
-		if (read_heredocs(cmd->redirs, *env, last_status) == E_FALSE)
-			return (1);
-		cmd = cmd->next;
-	}
-	cmd = pipeline->cmds;
-	if (!cmd->next && is_builtin(cmd->argv[0]) == E_TRUE)
-		return (run_builtin_with_redirs(cmd, env));
 	prev_fd = -1;
 	while (cmd)
 	{
+		if (read_heredocs(cmd->redirs, env, last_status) == E_FALSE)
+			return (-1);
 		if (cmd->next && pipe(fd) == -1)
 			return (-1);
-		last_pid = fork_one_cmd(cmd, prev_fd, cmd->next ? fd : NULL, *env);
-		if (prev_fd != -1)
-			close(prev_fd);
+		if (cmd->next)
+			last_pid = fork_one_cmd(cmd, prev_fd, fd, env);
+		else
+			last_pid = fork_one_cmd(cmd, prev_fd, NULL, env);
+		close(prev_fd);
 		if (cmd->next)
 		{
 			close(fd[1]);
@@ -48,9 +60,8 @@ int	run_pipeline(t_pipeline *pipeline, t_env **env, int last_status)
 		}
 		cmd = cmd->next;
 	}
-	if (prev_fd != -1)
-		close(prev_fd);
-	return (wait_all_children(last_pid));
+	close(prev_fd);
+	return (last_pid);
 }
 
 static int	run_builtin_with_redirs(t_cmd *cmd, t_env **env)

@@ -6,14 +6,14 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 18:09:52 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/16 18:09:53 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/18 21:17:42 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static char	*find_executable(char *cmd, t_env *env);
-void	exec_cmd(t_cmd *cmd, t_env *env);
+void		exec_cmd(t_cmd *cmd, t_env *env);
 
 void	child_exec(t_cmd *cmd, int prev_fd, int *pipe_fd, t_env *env)
 {

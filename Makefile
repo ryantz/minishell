@@ -6,7 +6,7 @@
 #    By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/08 23:35:05 by ryatan            #+#    #+#              #
-#    Updated: 2026/07/18 13:53:47 by ryatan           ###   ########.fr        #
+#    Updated: 2026/07/18 22:11:28 by ryatan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ SRC =  $(SRC_DIR)/$(HLP_DIR)/errors.c \
 	   $(SRC_DIR)/$(HLP_DIR)/free_pipeline.c \
 	   $(SRC_DIR)/$(HLP_DIR)/free.c \
 	   $(SRC_DIR)/$(HLP_DIR)/ft_strcmp.c \
+	   $(SRC_DIR)/$(HLP_DIR)/ft_strjoin_free.c \
 	   $(SRC_DIR)/$(HLP_DIR)/helpers.c \
 	   $(SRC_DIR)/$(HLP_DIR)/loggers.c 
 

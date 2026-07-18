@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 00:18:03 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/08 14:33:07 by fkoh             ###   ########.fr       */
+/*   Updated: 2026/07/18 21:54:06 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ t_status	is_operator(char c)
 	}
 	return (E_FALSE);
 }
+
 t_status	is_numeric(char *str)
 {
 	size_t	i;
@@ -69,13 +70,4 @@ t_status	is_numeric(char *str)
 		i++;
 	}
 	return (E_TRUE);
-}
-
-char	*ft_strjoin_free(char *s1, char *s2)
-{
-	char	*joined;
-
-	joined = ft_strjoin(s1, s2);
-	free(s1);
-	return (joined);
 }

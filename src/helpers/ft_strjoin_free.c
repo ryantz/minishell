@@ -1,26 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_pwd.c                                      :+:      :+:    :+:   */
+/*   ft_strjoin_free.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/16 18:09:30 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/18 21:14:24 by ryatan           ###   ########.fr       */
+/*   Created: 2026/07/18 21:54:53 by ryatan            #+#    #+#             */
+/*   Updated: 2026/07/18 21:54:59 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	builtin_pwd(t_env *env)
+char	*ft_strjoin_free(char *s1, char *s2)
 {
-	char	*pwd;
-	char	cwd[PATH_BUFFER];
+	char	*joined;
 
-	pwd = env_get(env, "PWD");
-	if (pwd)
-		return (ft_putendl_fd(pwd, STDOUT_FILENO), 0);
-	if (!getcwd(cwd, PATH_BUFFER))
-		return (1);
-	return (ft_putendl_fd(cwd, STDOUT_FILENO), 0);
+	joined = ft_strjoin(s1, s2);
+	free(s1);
+	return (joined);
 }

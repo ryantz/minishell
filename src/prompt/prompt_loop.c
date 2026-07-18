@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 00:18:13 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/18 13:48:22 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/18 21:56:34 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static int	process_line(char *line, t_env **env, int last_status);
 static int	handle_eof(int last_status, int interactive);
 static char	*next_line(const char *prompt, int interactive);
 static int	run_all_pipelines(t_pipeline *pipeline, t_env **env,
-		int last_status);
+				int last_status);
 
 int	prompt_loop(const char *prompt, t_env **env)
 {
