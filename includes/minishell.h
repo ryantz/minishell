@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/18 22:10:57 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/19 13:07:37 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,14 @@ typedef struct s_lexer_params
 	int		status;
 }	t_lexer_params;
 
+typedef struct s_exec_params
+{
+	int		prev_fd;
+	int		*pipe_fd;
+	t_env	*env;
+	int		last_status;
+}	t_exec_params;
+
 //signal_handle
 extern volatile sig_atomic_t	g_sigint_flag;
 
@@ -237,6 +245,8 @@ char		*expand_get_value(char *str, int *i, t_env *env, int exit_status);
 
 t_status	read_heredocs(t_redir *redirs, t_env *env, int exit_status);
 t_status	apply_redirs(t_redir *redirs);
-void		child_exec(t_cmd *cmd, int prev_fd, int *pipe_fd, t_env *env);
+void		child_exec(t_cmd *cmd, t_exec_params *exec_params);
+t_status	prepare_exec_struct(t_cmd *cmd, int prev_fd, int *fd,
+				t_exec_params *exec_params);
 
 #endif

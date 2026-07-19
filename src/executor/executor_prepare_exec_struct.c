@@ -1,34 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_exit.c                                     :+:      :+:    :+:   */
+/*   executor_prepare_struct.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/16 18:09:22 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/19 12:28:20 by ryatan           ###   ########.fr       */
+/*   Created: 2026/07/19 13:01:01 by ryatan            #+#    #+#             */
+/*   Updated: 2026/07/19 13:05:48 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	builtin_exit(char **argv, int last_status)
+t_status	prepare_exec_struct(t_cmd *cmd, int prev_fd, int *fd,
+			t_exec_params *exec_params)
 {
-	long	code;
-
-	if (argv[1] && argv[2])
-	{
-		write_err("exit: too many arguments");
-		return (1);
-	}
-	if (argv[1] && is_numeric(argv[1]) == E_FALSE)
-	{
-		write_err("exit: numeric argument required");
-		exit(2);
-	}
-	if (argv[1])
-		code = ft_atol(argv[1]) % 256;
+	if (cmd->next && pipe(fd) == -1)
+		return (E_FALSE);
+	exec_params->prev_fd = prev_fd;
+	if (cmd->next)
+		exec_params->pipe_fd = fd;
 	else
-		code = last_status;
-	exit((int)code);
+		exec_params->pipe_fd = NULL;
+	return (E_TRUE);
 }

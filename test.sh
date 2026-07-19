@@ -221,6 +221,24 @@ run_test_status_only() {
 	fi
 }
 
+# run_test_contains <name> <input_block> <needle>
+#
+# Use when the exact wording of a message is implementation-specific (e.g.
+# a builtin error message) and comparing full output against real bash would
+# just be comparing two different but equally valid strings. Only checks that
+# needle appears somewhere in the captured output.
+run_test_contains() {
+	local name="$1" input_block="$2" needle="$3"
+
+	capture "$input_block"
+	if [[ "$CAPTURED_OUTPUT" == *"$needle"* ]]; then
+		report_pass "$name"
+		[ "$VERBOSE" -eq 1 ] && echo -e "  ${CYAN}output:${RESET} $CAPTURED_OUTPUT"
+	else
+		report_fail "$name" "$input_block" "output containing: $needle" "$CAPTURED_OUTPUT"
+	fi
+}
+
 # run_test_process_exit <name> <input_block> <bash_reference_command>
 #
 # For cases where the tested command terminates the shell itself (e.g. the
@@ -282,8 +300,8 @@ run_test_process_exit "exit with non-numeric arg errors and exits" \
 	'exit abc' 'exit abc'
 run_test_status_only "exit with too many arguments does not exit, sets status" \
 	'exit 1 2' 'exit 1 2'
-run_test "shell survives exit with too many arguments and keeps running" \
-	$'exit 1 2\necho still_alive' $'exit 1 2; echo still_alive'
+run_test_contains "shell survives exit with too many arguments and keeps running" \
+	$'exit 1 2\necho still_alive' 'still_alive'
 
 echo -e "\n${CYAN}${BOLD}==> EOF (Ctrl-D) handling${RESET}"
 # A closed/empty pipe stdin delivers EOF to read() exactly like Ctrl-D does
@@ -450,8 +468,8 @@ run_test "heredoc with variable expansion (unquoted delimiter)" \
 	$'export FOO=bar\ncat << EOF\nvalue is $FOO\nEOF' \
 	$'export FOO=bar\ncat << EOF\nvalue is $FOO\nEOF'
 run_test "heredoc with quoted delimiter suppresses expansion" \
-	$'export FOO=bar\ncat << '"'"'EOF'"'"'\nvalue is $FOO\nEOF' \
-	$'export FOO=bar\ncat << '"'"'EOF'"'"'\nvalue is $FOO\nEOF'
+	$'export FOO=bar\ncat << '"'"'EOF'"'"$'\nvalue is $FOO\nEOF' \
+	$'export FOO=bar\ncat << '"'"'EOF'"'"$'\nvalue is $FOO\nEOF'
 
 echo -e "\n${CYAN}${BOLD}==> command not found${RESET}"
 # bash's own "command not found" wording differs from a custom minishell's;

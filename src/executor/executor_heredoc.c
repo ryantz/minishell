@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 13:28:09 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/18 21:38:38 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/19 12:51:05 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,13 +104,10 @@ static t_status	write_heredoc_line(char *line, t_heredoc_params *heredoc)
 	else
 		expanded = expand_segment(ft_strdup(line), heredoc->env,
 				heredoc->exit_status);
-	if (heredoc->redir->quoted)
-		free(line);
 	if (!expanded)
 		return (E_FALSE);
 	write(heredoc->write_fd, expanded, ft_strlen(expanded));
 	write(heredoc->write_fd, "\n", 1);
-	if (!heredoc->redir->quoted)
-		free(expanded);
+	free(expanded);
 	return (E_TRUE);
 }
