@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static t_env	*new_env_node(char *key, char *value, int has_value);
+static t_env	*new_env_node(char *key, char *value, int has_value, int exported);
 void			env_append(t_env *head, t_env *node);
 
 t_env	*env_init(char **envp)
@@ -29,9 +29,9 @@ t_env	*env_init(char **envp)
 		equals_ptr = ft_strchr(envp[i], '=');
 		if (equals_ptr)
 			node = new_env_node(ft_substr(envp[i], 0, equals_ptr - envp[i]),
-					ft_strdup(equals_ptr + 1), 1);
+					ft_strdup(equals_ptr + 1), 1, 1);
 		else
-			node = new_env_node(ft_strdup(envp[i]), NULL, 0);
+			node = new_env_node(ft_strdup(envp[i]), NULL, 0, 1);
 		if (!node)
 			return (free_env(head), NULL);
 		if (!head)
@@ -43,7 +43,7 @@ t_env	*env_init(char **envp)
 	return (head);
 }
 
-static t_env	*new_env_node(char *key, char *value, int has_value)
+static t_env	*new_env_node(char *key, char *value, int has_value, int exported)
 {
 	t_env	*node;
 
@@ -63,6 +63,7 @@ static t_env	*new_env_node(char *key, char *value, int has_value)
 	node->key = key;
 	node->value = value;
 	node->has_value = has_value;
+	node->exported = exported;
 	node->next = NULL;
 	return (node);
 }

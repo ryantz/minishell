@@ -33,11 +33,12 @@ void	print_sorted_env(t_env *env)
 	tmp = env;
 	while (tmp)
 	{
-		sorted[i++] = tmp;
+		if (tmp->exported)
+			sorted[i++] = tmp;
 		tmp = tmp->next;
 	}
-	sort_env_array(sorted, size);
-	display_sorted_env(sorted, size);
+	sort_env_array(sorted, i);
+	display_sorted_env(sorted, i);
 	free(sorted);
 }
 

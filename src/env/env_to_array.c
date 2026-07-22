@@ -28,7 +28,7 @@ char	**env_to_array(t_env *env)
 	i = 0;
 	while (ptr)
 	{
-		if (ptr->has_value && ptr->value != NULL)
+		if (ptr->exported && ptr->has_value && ptr->value != NULL)
 		{
 			tmp = ft_strjoin(ptr->key, "=");
 			arr[i] = ft_strjoin_free(tmp, ft_strdup(ptr->value));
@@ -49,7 +49,7 @@ static int	count_active_variables(t_env *env)
 	count = 0;
 	while (env)
 	{
-		if (env->has_value && env->value != NULL)
+		if (env->exported && env->has_value && env->value != NULL)
 			count++;
 		env = env->next;
 	}

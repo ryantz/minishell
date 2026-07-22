@@ -72,6 +72,7 @@ static t_status	env_set_append_new(t_env **env, char *key, char *value)
 		return (E_FALSE);
 	}
 	node->has_value = (value != NULL);
+	node->exported = 0;
 	node->next = NULL;
 	if (!*env)
 		*env = node;

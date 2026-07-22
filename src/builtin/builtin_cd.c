@@ -20,6 +20,11 @@ int	builtin_cd(char **argv, t_env **env)
 	char	*oldpwd;
 	char	cwd_buffer[PATH_BUFFER];
 
+	if(argv[1] && argv[2])
+	{
+		write_err("xiaoBij: cd: too many arguments");
+		return (1);
+	}
 	if (get_target(&target, argv, env) == E_FALSE)
 		return (1);
 	oldpwd = getcwd(cwd_buffer, PATH_BUFFER);

@@ -16,7 +16,7 @@ int	builtin_env(t_env *env)
 {
 	while (env)
 	{
-		if (env->has_value && env->value)
+		if (env->exported && env->has_value && env->value)
 		{
 			ft_putstr_fd(env->key, STDOUT_FILENO);
 			ft_putstr_fd("=", STDOUT_FILENO);

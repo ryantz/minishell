@@ -22,7 +22,7 @@ int	main(int argc, char **argv, char **envp)
 	env = env_init(envp);
 	if (!env)
 		return (write_err("Failed to initialize environment"), 1);
-	status = prompt_loop("tiny-> ", &env);
+	status = prompt_loop("xiaoBij-> ", &env);
 	free_env(env);
 	return (status);
 }

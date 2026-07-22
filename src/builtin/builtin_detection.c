@@ -34,7 +34,7 @@ int	exec_builtin(t_cmd *cmd, t_env **env, int last_status)
 	if (ft_strcmp(cmd->argv[0], "echo") == 0)
 		return (builtin_echo(cmd->argv));
 	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
-		return (builtin_pwd(*env));
+		return (builtin_pwd(cmd->argv, *env));
 	if (ft_strcmp(cmd->argv[0], "export") == 0)
 		return (builtin_export(cmd->argv, env));
 	if (ft_strcmp(cmd->argv[0], "unset") == 0)

@@ -62,6 +62,7 @@ SRC += $(SRC_DIR)/$(ENV_DIR)/env_get.c \
 	   $(SRC_DIR)/$(ENV_DIR)/env_list.c \
 	   $(SRC_DIR)/$(ENV_DIR)/env_set_unset.c \
 	   $(SRC_DIR)/$(ENV_DIR)/env_to_array.c \
+	   $(SRC_DIR)/$(ENV_DIR)/env_export.c \
 	   $(SRC_DIR)/$(ENV_DIR)/print_sorted_env.c
 
 SRC += $(SRC_DIR)/$(EXPAND_DIR)/expand_build.c \
@@ -72,6 +73,7 @@ SRC += $(SRC_DIR)/$(EXE_DIR)/executor_exec.c \
 	   $(SRC_DIR)/$(EXE_DIR)/executor_heredoc.c \
 	   $(SRC_DIR)/$(EXE_DIR)/executor_pipeline.c \
 	   $(SRC_DIR)/$(EXE_DIR)/executor_prepare_exec_struct.c \
+	   $(SRC_DIR)/$(EXE_DIR)/executor_errors.c \
 	   $(SRC_DIR)/$(EXE_DIR)/executor_redir.c
 
 SRC += $(SRC_DIR)/$(BUILTIN_DIR)/builtin_cd.c \

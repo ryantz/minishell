@@ -110,8 +110,18 @@ typedef struct s_env
 	char			*key;
 	char			*value;
 	int				has_value;
+	int				exported;
 	struct s_env	*next;
 }	t_env;
+
+typedef enum e_exec_err
+{
+	EXEC_FOUND,
+	EXEC_NOT_FOUND,
+	EXEC_NO_SUCH_FILE,
+	EXEC_IS_DIR,
+	EXEC_PERM_DENIED
+}	t_exec_err;
 
 typedef struct s_heredoc_params
 {
@@ -227,7 +237,7 @@ t_status	is_builtin(char *cmd_name);
 int			exec_builtin(t_cmd *cmd, t_env **env, int last_status);
 int			builtin_cd(char **argv, t_env **env);
 int			builtin_echo(char **argv);
-int			builtin_pwd(t_env *env);
+int			builtin_pwd(char **argv, t_env *env);
 int			builtin_export(char **argv, t_env **env);
 int			builtin_unset(char **argv, t_env **env);
 int			builtin_env(t_env *env);
@@ -250,5 +260,9 @@ t_status	prepare_exec_struct(t_cmd *cmd, int prev_fd, int *fd,
 				t_exec_params *exec_params);
 void		export_one(t_env **env, char *arg);
 t_status 	handle_sole_assignments(t_cmd *cmd, t_env **env);
+void    	set_shell_var(t_env **env, char *arg);
+t_status 	mark_as_export(t_env **env, char *key);
+void	exec_report_errno(char *cmd);
+void	exec_report_error(char *cmd, t_exec_err err);
 
 #endif

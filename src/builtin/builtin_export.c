@@ -52,11 +52,17 @@ void	export_one(t_env **env, char *arg)
 	{
 		key = ft_substr(arg, 0, eq - arg);
 		if (key)
+		{
 			env_set(env, key, ft_strdup(eq + 1));
+			mark_as_export(env, key);
+		}
 		free(key);
 	}
 	else
+	{
 		env_touch(env, arg);
+		mark_as_export(env, arg);
+	}
 }
 
 static int	is_valid_identifier(char *str)
@@ -88,22 +94,17 @@ t_status handle_sole_assignments(t_cmd *cmd, t_env **env)
 
     if (!cmd || !cmd->argv || !cmd->argv[0])
         return (E_FALSE);
-
-    /* 1. Check if EVERY argument in argv is a valid assignment (e.g. KEY=VAL) */
     i = 0;
     while (cmd->argv[i])
     {
-        /* Must contain '=' AND have a valid identifier before '=' */
         if (!ft_strchr(cmd->argv[i], '=') || !is_valid_identifier(cmd->argv[i]))
             return (E_FALSE);
         i++;
     }
-
-    /* 2. All args are assignments! Export them to the shell environment */
     i = 0;
     while (cmd->argv[i])
     {
-        export_one(env, cmd->argv[i]);
+        set_shell_var(env, cmd->argv[i]);
         i++;
     }
     return (E_TRUE);
