@@ -21,7 +21,7 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	env = env_init(envp);
 	if (!env)
-		return (write_err("Failed to initialize environment\n"), 1);
+		return (write_err("Failed to initialize environment"), 1);
 	status = prompt_loop("tiny-> ", &env);
 	free_env(env);
 	return (status);

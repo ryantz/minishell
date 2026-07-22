@@ -102,7 +102,7 @@ static t_status	write_heredoc_line(char *line, t_heredoc_params *heredoc)
 	if (heredoc->redir->quoted)
 		expanded = line;
 	else
-		expanded = expand_segment(ft_strdup(line), heredoc->env,
+		expanded = expand_segment(line, heredoc->env,
 				heredoc->exit_status);
 	if (!expanded)
 		return (E_FALSE);

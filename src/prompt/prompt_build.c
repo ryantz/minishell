@@ -71,12 +71,13 @@ static char	*get_hostname(const char *path)
 	buffer = malloc(100 * sizeof(char));
 	if (!buffer)
 		return (NULL);
-	bytes_read = read(fd, buffer, 100);
+	bytes_read = read(fd, buffer, 99);
 	if (bytes_read <= 0)
 	{
 		free(buffer);
 		return (NULL);
 	}
+	buffer[bytes_read] = '\0';
 	split = ft_split(buffer, '.');
 	free(buffer);
 	if (!split)
