@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/19 13:07:37 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/22 20:22:15 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,10 +259,10 @@ void		child_exec(t_cmd *cmd, t_exec_params *exec_params);
 t_status	prepare_exec_struct(t_cmd *cmd, int prev_fd, int *fd,
 				t_exec_params *exec_params);
 void		export_one(t_env **env, char *arg);
-t_status 	handle_sole_assignments(t_cmd *cmd, t_env **env);
-void    	set_shell_var(t_env **env, char *arg);
-t_status 	mark_as_export(t_env **env, char *key);
-void	exec_report_errno(char *cmd);
-void	exec_report_error(char *cmd, t_exec_err err);
+t_status	handle_sole_assignments(t_cmd *cmd, t_env **env);
+void		set_shell_var(t_env **env, char *arg);
+t_status	mark_as_export(t_env **env, char *key);
+void		exec_report_errno(char *cmd);
+void		exec_report_error(char *cmd, t_exec_err err);
 
 #endif

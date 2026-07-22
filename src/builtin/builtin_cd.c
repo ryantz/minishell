@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 18:09:06 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/18 13:02:25 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/22 20:11:28 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	builtin_cd(char **argv, t_env **env)
 	char	*oldpwd;
 	char	cwd_buffer[PATH_BUFFER];
 
-	if(argv[1] && argv[2])
+	if (argv[1] && argv[2])
 	{
 		write_err("xiaoBij: cd: too many arguments");
 		return (1);

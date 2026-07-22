@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 18:09:25 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/16 18:09:26 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/22 20:11:58 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,24 +88,24 @@ static void	print_export_error(char *arg)
 	ft_putendl_fd("': not a valid identifier", 2);
 }
 
-t_status handle_sole_assignments(t_cmd *cmd, t_env **env)
+t_status	handle_sole_assignments(t_cmd *cmd, t_env **env)
 {
-    int i;
+	int	i;
 
-    if (!cmd || !cmd->argv || !cmd->argv[0])
-        return (E_FALSE);
-    i = 0;
-    while (cmd->argv[i])
-    {
-        if (!ft_strchr(cmd->argv[i], '=') || !is_valid_identifier(cmd->argv[i]))
-            return (E_FALSE);
-        i++;
-    }
-    i = 0;
-    while (cmd->argv[i])
-    {
-        set_shell_var(env, cmd->argv[i]);
-        i++;
-    }
-    return (E_TRUE);
+	if (!cmd || !cmd->argv || !cmd->argv[0])
+		return (E_FALSE);
+	i = 0;
+	while (cmd->argv[i])
+	{
+		if (!ft_strchr(cmd->argv[i], '=') || !is_valid_identifier(cmd->argv[i]))
+			return (E_FALSE);
+		i++;
+	}
+	i = 0;
+	while (cmd->argv[i])
+	{
+		set_shell_var(env, cmd->argv[i]);
+		i++;
+	}
+	return (E_TRUE);
 }

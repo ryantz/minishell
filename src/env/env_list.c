@@ -6,13 +6,14 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 02:33:55 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/16 02:35:52 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/22 20:15:36 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_env	*new_env_node(char *key, char *value, int has_value, int exported);
+static t_env	*new_env_node(char *key, char *value, int has_value,
+					int exported);
 void			env_append(t_env *head, t_env *node);
 
 t_env	*env_init(char **envp)
@@ -43,7 +44,8 @@ t_env	*env_init(char **envp)
 	return (head);
 }
 
-static t_env	*new_env_node(char *key, char *value, int has_value, int exported)
+static t_env	*new_env_node(char *key, char *value, int has_value,
+			int exported)
 {
 	t_env	*node;
 
