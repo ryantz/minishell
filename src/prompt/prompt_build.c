@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 18:10:43 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/16 18:10:44 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/22 13:27:39 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,16 +73,12 @@ static char	*get_hostname(const char *path)
 		return (NULL);
 	bytes_read = read(fd, buffer, 99);
 	if (bytes_read <= 0)
-	{
-		free(buffer);
-		return (NULL);
-	}
+		return (free(buffer), NULL);
 	buffer[bytes_read] = '\0';
 	split = ft_split(buffer, '.');
 	free(buffer);
 	if (!split)
 		return (NULL);
 	hostname = ft_strdup(split[0]);
-	free_all(split);
-	return (hostname);
+	return (free_all(split), hostname);
 }
