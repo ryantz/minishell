@@ -53,7 +53,7 @@ void	exec_cmd(t_cmd *cmd, t_env *env)
 	path = find_executable(cmd->argv[0], env);
 	if (!path)
 	{
-		ft_putstr_fd("xiaoBij: ", 1);
+		ft_putstr_fd("xiaoBij: ", 2);
 		ft_putstr_fd(cmd->argv[0], 2);
 		ft_putendl_fd(": No such file or directory", 2);
 		exit(127);

@@ -18,29 +18,41 @@ static int		run_builtin_with_redirs(t_cmd *cmd, t_env **env,
 					int last_status);
 static pid_t	run_pipeline_cmds(t_cmd *cmd, t_env *env, int last_status);
 
-int	run_pipeline(t_pipeline *pipeline, t_env **env, int last_status)
+int run_pipeline(t_pipeline *pipeline, t_env **env, int last_status)
 {
-	t_cmd	*cmd;
-	pid_t	last_pid;
-	int status;
+    t_cmd   *cmd;
+    pid_t   last_pid;
+    int     status;
 
-	cmd = pipeline->cmds;
-	if (!cmd->next && is_builtin(cmd->argv[0]) == E_TRUE)
-	{
-		if (read_heredocs(cmd->redirs, *env, last_status) == E_FALSE)
-			return (1);
-		return (run_builtin_with_redirs(cmd, env, last_status));
-	}
-	signal(SIGINT, SIG_IGN);
-	last_pid = run_pipeline_cmds(cmd, *env, last_status);
-	if (last_pid == -1)
-	{
-		signal(SIGINT, sigint_handler);
-		return (1);
-	}
-	status = wait_all_children(last_pid);
-	signal(SIGINT, sigint_handler);
-	return (wait_all_children(last_pid));
+    cmd = pipeline->cmds;
+
+    /* Handle single command execution without pipes */
+    if (!cmd->next)
+    {
+        /* 1. Handle sole variable assignments (FOO=bar, A=1 B=2, etc.) */
+        if (handle_sole_assignments(cmd, env) == E_TRUE)
+            return (0);
+
+        /* 2. Handle single builtin execution (cd, exit, export, etc.) */
+        if (cmd->argv && cmd->argv[0] && is_builtin(cmd->argv[0]) == E_TRUE)
+        {
+            if (read_heredocs(cmd->redirs, *env, last_status) == E_FALSE)
+                return (1);
+            return (run_builtin_with_redirs(cmd, env, last_status));
+        }
+    }
+
+    /* Standard pipeline execution for external commands / multiple pipes */
+    signal(SIGINT, SIG_IGN);
+    last_pid = run_pipeline_cmds(cmd, *env, last_status);
+    if (last_pid == -1)
+    {
+        signal(SIGINT, sigint_handler);
+        return (1);
+    }
+    status = wait_all_children(last_pid);
+    signal(SIGINT, sigint_handler);
+    return (status);
 }
 
 static pid_t	run_pipeline_cmds(t_cmd *cmd, t_env *env, int last_status)
@@ -105,22 +117,34 @@ static pid_t	fork_one_cmd(t_cmd *cmd, t_exec_params *exec_params)
 	return (pid);
 }
 
-static int	wait_all_children(pid_t last_pid)
+static int wait_all_children(pid_t last_pid)
 {
-	int		status;
-	pid_t	waited;
+    int     status;
+    int     last_status;
+    pid_t   waited;
+    int     sig_received;
 
-	status = 0;
-	waited = wait(&status);
-	while (waited > 0)
-	{
-		if (waited == last_pid)
-			break ;
-		waited = wait(&status);
-	}
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	if (WIFSIGNALED(status))
-		return (128 + WTERMSIG(status));
-	return (1);
+    last_status = 0;
+    sig_received = 0;
+    waited = wait(&status);
+    while (waited > 0)
+    {
+        if (waited == last_pid)
+            last_status = status;
+        if (WIFSIGNALED(status))
+            sig_received = WTERMSIG(status);
+        waited = wait(&status);
+    }
+    if (sig_received == SIGINT)
+    {
+        write(1, "\n", 1);
+        g_sigint_flag = SIGINT;
+    }
+    else if (sig_received == SIGQUIT)
+        ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
+    if (WIFEXITED(last_status))
+        return (WEXITSTATUS(last_status));
+    if (WIFSIGNALED(last_status))
+        return (128 + WTERMSIG(last_status));
+    return (1);
 }

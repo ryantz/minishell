@@ -248,5 +248,7 @@ t_status	apply_redirs(t_redir *redirs);
 void		child_exec(t_cmd *cmd, t_exec_params *exec_params);
 t_status	prepare_exec_struct(t_cmd *cmd, int prev_fd, int *fd,
 				t_exec_params *exec_params);
+void		export_one(t_env **env, char *arg);
+t_status 	handle_sole_assignments(t_cmd *cmd, t_env **env);
 
 #endif

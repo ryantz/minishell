@@ -14,7 +14,7 @@
 
 static int		is_valid_identifier(char *str);
 static void		print_export_error(char *arg);
-static void		export_one(t_env **env, char *arg);
+void			export_one(t_env **env, char *arg);
 
 int	builtin_export(char **args, t_env **env)
 {
@@ -42,7 +42,7 @@ int	builtin_export(char **args, t_env **env)
 	return (status);
 }
 
-static void	export_one(t_env **env, char *arg)
+void	export_one(t_env **env, char *arg)
 {
 	char	*eq;
 	char	*key;
@@ -80,4 +80,31 @@ static void	print_export_error(char *arg)
 	ft_putstr_fd("minishell: export: `", 2);
 	ft_putstr_fd(arg, 2);
 	ft_putendl_fd("': not a valid identifier", 2);
+}
+
+t_status handle_sole_assignments(t_cmd *cmd, t_env **env)
+{
+    int i;
+
+    if (!cmd || !cmd->argv || !cmd->argv[0])
+        return (E_FALSE);
+
+    /* 1. Check if EVERY argument in argv is a valid assignment (e.g. KEY=VAL) */
+    i = 0;
+    while (cmd->argv[i])
+    {
+        /* Must contain '=' AND have a valid identifier before '=' */
+        if (!ft_strchr(cmd->argv[i], '=') || !is_valid_identifier(cmd->argv[i]))
+            return (E_FALSE);
+        i++;
+    }
+
+    /* 2. All args are assignments! Export them to the shell environment */
+    i = 0;
+    while (cmd->argv[i])
+    {
+        export_one(env, cmd->argv[i]);
+        i++;
+    }
+    return (E_TRUE);
 }
