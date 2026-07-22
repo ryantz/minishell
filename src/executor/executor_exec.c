@@ -45,17 +45,25 @@ void	child_exec(t_cmd *cmd, t_exec_params *exec_params)
 void	exec_cmd(t_cmd *cmd, t_env *env)
 {
 	char	*path;
+	char	**envp;
 
+	envp = env_to_array(env);
 	if (!cmd->argv[0])
 		exit(0);
 	path = find_executable(cmd->argv[0], env);
 	if (!path)
 	{
+		ft_putstr_fd("xiaoBij: ", 1);
 		ft_putstr_fd(cmd->argv[0], 2);
-		ft_putendl_fd(": command not found", 2);
+		ft_putendl_fd(": No such file or directory", 2);
 		exit(127);
 	}
-	execve(path, cmd->argv, env_to_array(env));
+	execve(path, cmd->argv, envp);
+	ft_putstr_fd("xiaoBij: ", 1);
+	ft_putstr_fd(cmd->argv[0], 1);
+	ft_putendl_fd(": Is a directory", 1);
+	free_all(envp);
+	free(path);
 	exit(126);
 }
 

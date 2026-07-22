@@ -30,6 +30,11 @@ int	prompt_loop(const char *prompt, t_env **env)
 	while (1)
 	{
 		rl_return = next_line(prompt, interactive);
+		if (g_sigint_flag)
+		{
+			last_status = 130;
+			g_sigint_flag = 0;
+		}
 		if (!rl_return)
 			return (handle_eof(last_status, interactive));
 		if (*rl_return == '\0')

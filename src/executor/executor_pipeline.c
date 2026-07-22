@@ -22,6 +22,7 @@ int	run_pipeline(t_pipeline *pipeline, t_env **env, int last_status)
 {
 	t_cmd	*cmd;
 	pid_t	last_pid;
+	int status;
 
 	cmd = pipeline->cmds;
 	if (!cmd->next && is_builtin(cmd->argv[0]) == E_TRUE)
@@ -30,9 +31,15 @@ int	run_pipeline(t_pipeline *pipeline, t_env **env, int last_status)
 			return (1);
 		return (run_builtin_with_redirs(cmd, env, last_status));
 	}
+	signal(SIGINT, SIG_IGN);
 	last_pid = run_pipeline_cmds(cmd, *env, last_status);
 	if (last_pid == -1)
+	{
+		signal(SIGINT, sigint_handler);
 		return (1);
+	}
+	status = wait_all_children(last_pid);
+	signal(SIGINT, sigint_handler);
 	return (wait_all_children(last_pid));
 }
 
@@ -90,7 +97,11 @@ static pid_t	fork_one_cmd(t_cmd *cmd, t_exec_params *exec_params)
 
 	pid = fork();
 	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		child_exec(cmd, exec_params);
+	}
 	return (pid);
 }
 
