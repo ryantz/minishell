@@ -6,74 +6,75 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 18:09:56 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/23 09:42:26 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/23 10:40:58 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static pid_t	fork_one_cmd(t_cmd *cmd, t_exec_params *exec_params);
+static t_status	run_if_single_cmd(t_cmd *cmd, t_single_cmd_params *s_cmd);
+static t_status	read_all_heredocs(t_cmd *cmds, t_env *env, int last_status);
 static int		run_builtin_with_redirs(t_cmd *cmd, t_env **env,
 					int last_status, int *should_exit);
-static pid_t	run_pipeline_cmds(t_cmd *cmd, t_env *env, int last_status);
+static int		status_after_pipeline(pid_t last_pid);
 
 int	run_pipeline(t_pipeline *pipeline, t_env **env, int last_status,
 			int *s_e)
 {
-	t_cmd	*cmd;
-	pid_t	last_pid;
-	int		status;
+	t_cmd				*cmd;
+	pid_t				last_pid;
+	t_single_cmd_params	s_cmd;
 
 	cmd = pipeline->cmds;
-	if (!cmd->next)
-	{
-		if (handle_sole_assignments(cmd, env) == E_TRUE)
-			return (0);
-		if (cmd->argv && cmd->argv[0] && is_builtin(cmd->argv[0]) == E_TRUE)
-		{
-			if (read_heredocs(cmd->redirs, *env, last_status) == E_FALSE)
-				return (1);
-			return (run_builtin_with_redirs(cmd, env, last_status, s_e));
-		}
-	}
+	s_cmd.env = env;
+	s_cmd.last_status = last_status;
+	s_cmd.should_exit = s_e;
+	if (run_if_single_cmd(cmd, &s_cmd) == E_TRUE)
+		return (s_cmd.out_status);
+	if (read_all_heredocs(cmd, *env, last_status) == E_FALSE)
+		return (1);
 	signal(SIGINT, SIG_IGN);
 	last_pid = run_pipeline_cmds(cmd, *env, last_status);
 	if (last_pid == -1)
 	{
+		wait_all_children(-1);
 		signal(SIGINT, sigint_handler);
 		return (1);
 	}
-	status = wait_all_children(last_pid);
-	return (signal(SIGINT, sigint_handler), status);
+	return (status_after_pipeline(last_pid));
 }
 
-static pid_t	run_pipeline_cmds(t_cmd *cmd, t_env *env, int last_status)
+static t_status	run_if_single_cmd(t_cmd *cmd, t_single_cmd_params *s_cmd)
 {
-	int				prev_fd;
-	int				fd[2];
-	pid_t			last_pid;
-	t_exec_params	exec_params;
-
-	prev_fd = -1;
-	exec_params.env = env;
-	exec_params.last_status = last_status;
-	while (cmd)
+	if (cmd->next)
+		return (E_FALSE);
+	if (handle_sole_assignments(cmd, s_cmd->env) == E_TRUE)
 	{
-		if (read_heredocs(cmd->redirs, env, last_status) == E_FALSE)
-			return (-1);
-		if (prepare_exec_struct(cmd, prev_fd, fd, &exec_params) == E_FALSE)
-			return (-1);
-		last_pid = fork_one_cmd(cmd, &exec_params);
-		close(prev_fd);
-		prev_fd = -1;
-		if (cmd->next)
-		{
-			close(fd[1]);
-			prev_fd = fd[0];
-		}
-		cmd = cmd->next;
+		s_cmd->out_status = 0;
+		return (E_TRUE);
 	}
-	return (close(prev_fd), last_pid);
+	if (cmd->argv && cmd->argv[0] && is_builtin(cmd->argv[0]) == E_TRUE)
+	{
+		if (read_heredocs(cmd->redirs, *s_cmd->env,
+				s_cmd->last_status) == E_FALSE)
+			s_cmd->out_status = 1;
+		else
+			s_cmd->out_status = run_builtin_with_redirs(cmd, s_cmd->env,
+					s_cmd->last_status, s_cmd->should_exit);
+		return (E_TRUE);
+	}
+	return (E_FALSE);
+}
+
+static t_status	read_all_heredocs(t_cmd *cmds, t_env *env, int last_status)
+{
+	while (cmds)
+	{
+		if (read_heredocs(cmds->redirs, env, last_status) == E_FALSE)
+			return (E_FALSE);
+		cmds = cmds->next;
+	}
+	return (E_TRUE);
 }
 
 static int	run_builtin_with_redirs(t_cmd *cmd, t_env **env, int last_status,
@@ -96,21 +97,11 @@ static int	run_builtin_with_redirs(t_cmd *cmd, t_env **env, int last_status,
 	return (status);
 }
 
-static pid_t	fork_one_cmd(t_cmd *cmd, t_exec_params *exec_params)
+static int	status_after_pipeline(pid_t last_pid)
 {
-	pid_t	pid;
+	int	status;
 
-	pid = fork();
-	if (pid == -1)
-	{
-		write_err("xiaoBij: fork failed");
-		return (-1);
-	}
-	if (pid == 0)
-	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
-		child_exec(cmd, exec_params);
-	}
-	return (pid);
+	status = wait_all_children(last_pid);
+	signal(SIGINT, sigint_handler);
+	return (status);
 }

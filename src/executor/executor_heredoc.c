@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/18 13:28:09 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/23 10:01:31 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/23 10:04:37 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ t_status	read_heredocs(t_redir *redirs, t_env *env, int exit_status)
 	{
 		if (redirs->type == R_HEREDOC)
 		{
-			if (process_one_heredoc(head, redirs, env, exit_status == E_FALSE))
+			if (process_one_heredoc(head, redirs, env, exit_status) == E_FALSE)
 				return (E_FALSE);
 		}
 		redirs = redirs->next;

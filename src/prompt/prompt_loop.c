@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 00:18:13 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/23 09:28:46 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/23 10:44:57 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ static int	process_prompt(const char *prompt, t_env **env, int interactive,
 	char	*line;
 	int		should_exit;
 
+	should_exit = 0;
 	line = next_line(prompt, interactive);
 	check_sigint_flag(last_status);
 	if (!line)

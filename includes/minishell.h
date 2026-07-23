@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/23 09:58:23 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/23 10:31:44 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,14 @@ typedef struct s_exec_params
 	int		last_status;
 }	t_exec_params;
 
+typedef struct s_single_cmd_params
+{
+	t_env	**env;
+	int		last_status;
+	int		*should_exit;
+	int		out_status;
+}	t_single_cmd_params;
+
 //signal_handle
 extern volatile sig_atomic_t	g_sigint_flag;
 
@@ -271,5 +279,6 @@ char		*next_line(const char *prompt, int interactive);
 void		check_sigint_flag(int *last_status);
 char		*heredoc_next_line(void);
 t_status	write_heredoc_line(char *line, t_heredoc_params *heredoc);
+pid_t		run_pipeline_cmds(t_cmd *cmd, t_env *env, int last_status);
 
 #endif
