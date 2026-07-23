@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 18:09:09 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/16 18:09:10 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/23 08:52:13 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ t_status	is_builtin(char *cmd_name)
 	return (E_FALSE);
 }
 
-int	exec_builtin(t_cmd *cmd, t_env **env, int last_status)
+int	exec_builtin(t_cmd *cmd, t_env **env, int last_status, int *should_exit)
 {
 	if (ft_strcmp(cmd->argv[0], "cd") == 0)
 		return (builtin_cd(cmd->argv, env));
@@ -42,6 +42,6 @@ int	exec_builtin(t_cmd *cmd, t_env **env, int last_status)
 	if (ft_strcmp(cmd->argv[0], "env") == 0)
 		return (builtin_env(*env));
 	if (ft_strcmp(cmd->argv[0], "exit") == 0)
-		return (builtin_exit(cmd->argv, last_status));
+		return (builtin_exit(cmd->argv, last_status, should_exit));
 	return (1);
 }

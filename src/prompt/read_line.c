@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 00:00:00 by fkoh              #+#    #+#             */
-/*   Updated: 2026/07/18 21:57:20 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/23 09:22:00 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,13 @@ char	*read_line_stdin(void)
 	if (!stash)
 		return (NULL);
 	return (finish_line(&stash, nl));
+}
+
+void	check_sigint_flag(int *last_status)
+{
+	if (g_sigint_flag)
+	{
+		*last_status = 130;
+		g_sigint_flag = 0;
+	}
 }

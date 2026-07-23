@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 18:09:52 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/19 13:00:02 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/23 09:08:35 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void		exec_cmd(t_cmd *cmd, t_env *env);
 void	child_exec(t_cmd *cmd, t_exec_params *exec_params)
 {
 	t_env	*local_env;
+	int		should_exit;
 
 	if (exec_params->prev_fd != -1)
 	{
@@ -37,7 +38,9 @@ void	child_exec(t_cmd *cmd, t_exec_params *exec_params)
 	if (is_builtin(cmd->argv[0]) == E_TRUE)
 	{
 		local_env = exec_params->env;
-		exit(exec_builtin(cmd, &local_env, exec_params->last_status));
+		should_exit = 0;
+		exit(exec_builtin(cmd, &local_env, exec_params->last_status,
+				&should_exit));
 	}
 	exec_cmd(cmd, exec_params->env);
 }
@@ -48,13 +51,15 @@ void	exec_cmd(t_cmd *cmd, t_env *env)
 	char		**envp;
 	t_exec_err	err;
 
-	envp = env_to_array(env);
 	if (!cmd->argv[0])
 		exit(0);
 	path = find_executable(cmd->argv[0], env, &err);
 	if (!path)
 		exec_report_error(cmd->argv[0], err);
+	envp = env_to_array(env);
 	execve(path, cmd->argv, envp);
+	free(path);
+	free_all(envp);
 	exec_report_errno(cmd->argv[0]);
 }
 

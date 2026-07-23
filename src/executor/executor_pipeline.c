@@ -6,19 +6,19 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 18:09:56 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/22 20:19:29 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/23 09:09:10 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static pid_t	fork_one_cmd(t_cmd *cmd, t_exec_params *exec_params);
-static int		wait_all_children(pid_t last_pid);
 static int		run_builtin_with_redirs(t_cmd *cmd, t_env **env,
-					int last_status);
+					int last_status, int *should_exit);
 static pid_t	run_pipeline_cmds(t_cmd *cmd, t_env *env, int last_status);
 
-int	run_pipeline(t_pipeline *pipeline, t_env **env, int last_status)
+int	run_pipeline(t_pipeline *pipeline, t_env **env, int last_status,
+			int *s_e)
 {
 	t_cmd	*cmd;
 	pid_t	last_pid;
@@ -33,7 +33,7 @@ int	run_pipeline(t_pipeline *pipeline, t_env **env, int last_status)
 		{
 			if (read_heredocs(cmd->redirs, *env, last_status) == E_FALSE)
 				return (1);
-			return (run_builtin_with_redirs(cmd, env, last_status));
+			return (run_builtin_with_redirs(cmd, env, last_status, s_e));
 		}
 	}
 	signal(SIGINT, SIG_IGN);
@@ -44,8 +44,7 @@ int	run_pipeline(t_pipeline *pipeline, t_env **env, int last_status)
 		return (1);
 	}
 	status = wait_all_children(last_pid);
-	signal(SIGINT, sigint_handler);
-	return (status);
+	return (signal(SIGINT, sigint_handler), status);
 }
 
 static pid_t	run_pipeline_cmds(t_cmd *cmd, t_env *env, int last_status)
@@ -66,6 +65,7 @@ static pid_t	run_pipeline_cmds(t_cmd *cmd, t_env *env, int last_status)
 			return (-1);
 		last_pid = fork_one_cmd(cmd, &exec_params);
 		close(prev_fd);
+		prev_fd = -1;
 		if (cmd->next)
 		{
 			close(fd[1]);
@@ -73,11 +73,11 @@ static pid_t	run_pipeline_cmds(t_cmd *cmd, t_env *env, int last_status)
 		}
 		cmd = cmd->next;
 	}
-	close(prev_fd);
-	return (last_pid);
+	return (close(prev_fd), last_pid);
 }
 
-static int	run_builtin_with_redirs(t_cmd *cmd, t_env **env, int last_status)
+static int	run_builtin_with_redirs(t_cmd *cmd, t_env **env, int last_status,
+			int *should_exit)
 {
 	int	saved_in;
 	int	saved_out;
@@ -88,7 +88,7 @@ static int	run_builtin_with_redirs(t_cmd *cmd, t_env **env, int last_status)
 	if (apply_redirs(cmd->redirs) == E_FALSE)
 		status = 1;
 	else
-		status = exec_builtin(cmd, env, last_status);
+		status = exec_builtin(cmd, env, last_status, should_exit);
 	dup2(saved_in, STDIN_FILENO);
 	dup2(saved_out, STDOUT_FILENO);
 	close(saved_in);
@@ -108,36 +108,4 @@ static pid_t	fork_one_cmd(t_cmd *cmd, t_exec_params *exec_params)
 		child_exec(cmd, exec_params);
 	}
 	return (pid);
-}
-
-static int	wait_all_children(pid_t last_pid)
-{
-	int		status;
-	int		last_status;
-	pid_t	waited;
-	int		sig_received;
-
-	last_status = 0;
-	sig_received = 0;
-	waited = wait(&status);
-	while (waited > 0)
-	{
-		if (waited == last_pid)
-			last_status = status;
-		if (WIFSIGNALED(status))
-			sig_received = WTERMSIG(status);
-		waited = wait(&status);
-	}
-	if (sig_received == SIGINT)
-	{
-		write(1, "\n", 1);
-		g_sigint_flag = SIGINT;
-	}
-	else if (sig_received == SIGQUIT)
-		ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
-	if (WIFEXITED(last_status))
-		return (WEXITSTATUS(last_status));
-	if (WIFSIGNALED(last_status))
-		return (128 + WTERMSIG(last_status));
-	return (1);
 }

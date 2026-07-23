@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/17 00:00:00 by fkoh              #+#    #+#             */
-/*   Updated: 2026/07/17 00:00:00 by fkoh             ###   ########.fr       */
+/*   Updated: 2026/07/23 08:09:59 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,11 @@ char	*extract_remainder(char *stash, int nl)
 	rest = ft_substr(stash, nl + 1, ft_strlen(stash) - nl - 1);
 	free(stash);
 	return (rest);
+}
+
+char	*next_line(const char *prompt, int interactive)
+{
+	if (interactive)
+		return (readline(prompt));
+	return (read_line_stdin());
 }

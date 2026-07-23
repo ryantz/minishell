@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/01 13:52:53 by fkoh              #+#    #+#             */
-/*   Updated: 2026/07/18 13:49:49 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/23 08:30:01 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ volatile sig_atomic_t	g_sigint_flag = 0;
 void	sigint_handler(int sig)
 {
 	(void)sig;
-	g_sigint_flag = 1;
+	g_sigint_flag = SIGINT;
 	write(STDOUT_FILENO, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);

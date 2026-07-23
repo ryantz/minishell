@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/22 20:22:15 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/23 09:21:38 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,20 +234,22 @@ void		free_env(t_env *env);
 
 //builtins
 t_status	is_builtin(char *cmd_name);
-int			exec_builtin(t_cmd *cmd, t_env **env, int last_status);
+int			exec_builtin(t_cmd *cmd, t_env **env, int last_status,
+				int *should_exit);
 int			builtin_cd(char **argv, t_env **env);
 int			builtin_echo(char **argv);
 int			builtin_pwd(char **argv, t_env *env);
 int			builtin_export(char **argv, t_env **env);
 int			builtin_unset(char **argv, t_env **env);
 int			builtin_env(t_env *env);
-int			builtin_exit(char **argv, int last_status);
+int			builtin_exit(char **argv, int last_status, int *should_exit);
 void		print_sorted_env(t_env *env);
 
 void		init_signals(void);
 void		sigint_handler(int sig);
 
-int			run_pipeline(t_pipeline *pipeline, t_env **env, int last_status);
+int			run_pipeline(t_pipeline *pipeline, t_env **env, int last_status,
+				int *should_exit);
 
 int			expand_calc_len(char *str, t_env *env, int exit_status);
 int			expand_is_var_start(char *str, int i);
@@ -260,9 +262,12 @@ t_status	prepare_exec_struct(t_cmd *cmd, int prev_fd, int *fd,
 				t_exec_params *exec_params);
 void		export_one(t_env **env, char *arg);
 t_status	handle_sole_assignments(t_cmd *cmd, t_env **env);
+int			wait_all_children(pid_t last_pid);
 void		set_shell_var(t_env **env, char *arg);
 t_status	mark_as_export(t_env **env, char *key);
 void		exec_report_errno(char *cmd);
 void		exec_report_error(char *cmd, t_exec_err err);
+char		*next_line(const char *prompt, int interactive);
+void		check_sigint_flag(int *last_status);
 
 #endif

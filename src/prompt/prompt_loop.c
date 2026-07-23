@@ -6,48 +6,35 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 00:18:13 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/18 21:56:34 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/23 09:28:46 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	process_line(char *line, t_env **env, int last_status);
+static int	process_prompt(const char *prompt, t_env **env, int interactive,
+				int *last_status);
+static int	process_line(char *line, t_env **env, int last_status,
+				int *should_exit);
 static int	handle_eof(int last_status, int interactive);
-static char	*next_line(const char *prompt, int interactive);
 static int	run_all_pipelines(t_pipeline *pipeline, t_env **env,
-				int last_status);
+				int last_status, int *should_exit);
 
 int	prompt_loop(const char *prompt, t_env **env)
 {
-	char	*rl_return;
 	int		last_status;
 	int		interactive;
+	int		ret;
 
 	init_signals();
 	last_status = 0;
 	interactive = isatty(STDIN_FILENO);
 	while (1)
 	{
-		rl_return = next_line(prompt, interactive);
-		if (g_sigint_flag)
-		{
-			last_status = 130;
-			g_sigint_flag = 0;
-		}
-		if (!rl_return)
-			return (handle_eof(last_status, interactive));
-		if (*rl_return == '\0')
-		{
-			free(rl_return);
-			continue ;
-		}
-		if (interactive)
-			add_history(rl_return);
-		last_status = process_line(rl_return, env, last_status);
-		free(rl_return);
+		ret = process_prompt(prompt, env, interactive, &last_status);
+		if (ret != -1)
+			return (ret);
 	}
-	return (last_status);
 }
 
 static int	handle_eof(int last_status, int interactive)
@@ -57,15 +44,8 @@ static int	handle_eof(int last_status, int interactive)
 	return (last_status);
 }
 
-static char	*next_line(const char *prompt, int interactive)
-{
-	if (interactive)
-		return (readline(prompt));
-	return (read_line_stdin());
-}
-
 static int	run_all_pipelines(t_pipeline *pipeline, t_env **env,
-		int last_status)
+		int last_status, int *should_exit)
 {
 	int	status;
 	int	skip;
@@ -75,7 +55,7 @@ static int	run_all_pipelines(t_pipeline *pipeline, t_env **env,
 	while (pipeline)
 	{
 		if (!skip)
-			status = run_pipeline(pipeline, env, status);
+			status = run_pipeline(pipeline, env, status, should_exit);
 		if (pipeline->link_to_next == L_AND)
 			skip = (status != 0);
 		else if (pipeline->link_to_next == L_OR)
@@ -87,7 +67,8 @@ static int	run_all_pipelines(t_pipeline *pipeline, t_env **env,
 	return (status);
 }
 
-static int	process_line(char *line, t_env **env, int last_status)
+static int	process_line(char *line, t_env **env, int last_status,
+			int *should_exit)
 {
 	t_token		*token_list;
 	t_pipeline	*pipelines;
@@ -102,7 +83,31 @@ static int	process_line(char *line, t_env **env, int last_status)
 		write_err("syntax error");
 		return (2);
 	}
-	last_status = run_all_pipelines(pipelines, env, last_status);
+	last_status = run_all_pipelines(pipelines, env, last_status, should_exit);
 	free_pipelines(pipelines);
 	return (last_status);
+}
+
+static int	process_prompt(const char *prompt, t_env **env, int interactive,
+			int *last_status)
+{
+	char	*line;
+	int		should_exit;
+
+	line = next_line(prompt, interactive);
+	check_sigint_flag(last_status);
+	if (!line)
+		return (handle_eof(*last_status, interactive));
+	if (*line == '\0')
+	{
+		free(line);
+		return (-1);
+	}
+	if (interactive)
+		add_history(line);
+	*last_status = process_line(line, env, *last_status, &should_exit);
+	free(line);
+	if (should_exit)
+		return (*last_status);
+	return (-1);
 }

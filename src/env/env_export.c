@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/22 20:12:57 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/22 20:15:01 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/23 09:03:50 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ void	set_shell_var(t_env **env, char *arg)
 	char	*key;
 
 	eq = ft_strchr(arg, '=');
+	if (!eq)
+		return ;
 	key = ft_substr(arg, 0, eq - arg);
 	if (key)
 		env_set(env, key, ft_strdup(eq + 1));

@@ -6,12 +6,13 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 18:09:06 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/22 20:11:28 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/23 08:30:29 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static void		update_pwd_variables(t_env **env, char *oldpwd);
 static t_status	get_target(char **target, char **argv, t_env **env);
 
 int	builtin_cd(char **argv, t_env **env)
@@ -33,11 +34,24 @@ int	builtin_cd(char **argv, t_env **env)
 		write_err_arg("cd", target);
 		return (1);
 	}
-	if (oldpwd)
-		env_set(env, "OLDPWD", ft_strdup(oldpwd));
-	if (getcwd(cwd_buffer, PATH_BUFFER))
-		env_set(env, "PWD", ft_strdup(cwd_buffer));
+	update_pwd_variables(env, oldpwd);
 	return (0);
+}
+
+static void	update_pwd_variables(t_env **env, char *oldpwd)
+{
+	char	cwd_buffer[PATH_BUFFER];
+
+	if (oldpwd)
+	{
+		env_set(env, "OLDPWD", ft_strdup(oldpwd));
+		mark_as_export(env, "OLDPWD");
+	}
+	if (getcwd(cwd_buffer, PATH_BUFFER))
+	{
+		env_set(env, "PWD", ft_strdup(cwd_buffer));
+		mark_as_export(env, "PWD");
+	}
 }
 
 static t_status	get_target(char **target, char **argv, t_env **env)
