@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/08 23:45:42 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/23 09:21:38 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/23 09:58:23 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,5 +269,7 @@ void		exec_report_errno(char *cmd);
 void		exec_report_error(char *cmd, t_exec_err err);
 char		*next_line(const char *prompt, int interactive);
 void		check_sigint_flag(int *last_status);
+char		*heredoc_next_line(void);
+t_status	write_heredoc_line(char *line, t_heredoc_params *heredoc);
 
 #endif

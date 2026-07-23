@@ -6,13 +6,12 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/08 16:14:11 by fkoh              #+#    #+#             */
-/*   Updated: 2026/07/18 13:26:48 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/23 09:46:43 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-//redirection parsing + the argc-counting
 static t_status		skip_redir_pair(t_token **cursor);
 
 t_status	is_redir_type(t_token_type type)
@@ -35,6 +34,8 @@ t_status	add_redir(t_cmd *cmd, t_token **cursor)
 	if (!*cursor || (*cursor)->type != WORD)
 		return (free(redir), E_FALSE);
 	redir->target = ft_strdup((*cursor)->value);
+	if (!redir->target)
+		return (free(redir), E_FALSE);
 	redir->quoted = (*cursor)->quotes;
 	redir->next = NULL;
 	*cursor = (*cursor)->next;

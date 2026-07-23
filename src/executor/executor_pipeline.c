@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 18:09:56 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/23 09:09:10 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/23 09:42:26 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,11 @@ static pid_t	fork_one_cmd(t_cmd *cmd, t_exec_params *exec_params)
 	pid_t	pid;
 
 	pid = fork();
+	if (pid == -1)
+	{
+		write_err("xiaoBij: fork failed");
+		return (-1);
+	}
 	if (pid == 0)
 	{
 		signal(SIGINT, SIG_DFL);
