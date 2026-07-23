@@ -153,6 +153,12 @@ typedef struct s_single_cmd_params
 	int		out_status;
 }	t_single_cmd_params;
 
+typedef struct s_loop_state
+{
+	int	last_status;
+	int	done;
+}	t_loop_state;
+
 //signal_handle
 extern volatile sig_atomic_t	g_sigint_flag;
 

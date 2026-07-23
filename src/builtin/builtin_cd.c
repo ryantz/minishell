@@ -6,7 +6,7 @@
 /*   By: ryatan <ryatan@student.42singapore.sg>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/07/16 18:09:06 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/23 08:30:29 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/23 11:51:10 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	builtin_cd(char **argv, t_env **env)
 	oldpwd = getcwd(cwd_buffer, PATH_BUFFER);
 	if (chdir(target) != 0)
 	{
-		write_err_arg("cd", target);
+		write_err_arg("xiaoBij: cd", target);
 		return (1);
 	}
 	update_pwd_variables(env, oldpwd);
@@ -61,7 +61,7 @@ static t_status	get_target(char **target, char **argv, t_env **env)
 		*target = env_get(*env, "HOME");
 		if (!*target)
 		{
-			write_err("cd: HOME not set");
+			write_err("xiaoBij: cd: HOME not set");
 			return (E_FALSE);
 		}
 	}
@@ -70,7 +70,7 @@ static t_status	get_target(char **target, char **argv, t_env **env)
 		*target = env_get(*env, "OLDPWD");
 		if (!*target)
 		{
-			write_err("cd: OLDPWD not set");
+			write_err("xiaoBij: cd: OLDPWD not set");
 			return (E_FALSE);
 		}
 		ft_putendl_fd(*target, 1);

@@ -6,7 +6,7 @@
 /*   By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/24 00:18:03 by ryatan            #+#    #+#             */
-/*   Updated: 2026/07/18 21:54:06 by ryatan           ###   ########.fr       */
+/*   Updated: 2026/07/23 11:29:26 by ryatan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,24 +50,4 @@ t_status	is_operator(char c)
 		i++;
 	}
 	return (E_FALSE);
-}
-
-t_status	is_numeric(char *str)
-{
-	size_t	i;
-
-	if (!str || !str[0])
-		return (E_FALSE);
-	i = 0;
-	if (str[i] == '+' || str[i] == '-')
-		i++;
-	if (!str[i])
-		return (E_FALSE);
-	while (str[i])
-	{
-		if (str[i] < '0' || str[i] > '9')
-			return (E_FALSE);
-		i++;
-	}
-	return (E_TRUE);
 }

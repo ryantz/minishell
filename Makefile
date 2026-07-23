@@ -6,7 +6,7 @@
 #    By: fkoh <fkoh@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/05/08 23:35:05 by ryatan            #+#    #+#              #
-#    Updated: 2026/07/23 10:13:06 by ryatan           ###   ########.fr        #
+#    Updated: 2026/07/23 11:30:15 by ryatan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,7 @@ SRC =  $(SRC_DIR)/$(HLP_DIR)/errors.c \
 	   $(SRC_DIR)/$(HLP_DIR)/ft_strcmp.c \
 	   $(SRC_DIR)/$(HLP_DIR)/ft_strjoin_free.c \
 	   $(SRC_DIR)/$(HLP_DIR)/helpers.c \
+	   $(SRC_DIR)/$(HLP_DIR)/isnumeric.c \
 	   $(SRC_DIR)/$(HLP_DIR)/loggers.c 
 
 SRC += $(SRC_DIR)/$(PAR_DIR)/append_cmd.c \

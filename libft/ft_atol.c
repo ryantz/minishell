@@ -23,60 +23,27 @@ static int	ft_isspace(const char *nptr)
 	return (offset);
 }
 
-static int	ft_ten_power(int val, int times)
-{
-	int	i;
-
-	i = 0;
-	while (i < times)
-	{
-		val *= 10;
-		i++;
-	}
-	return (val);
-}
-
-static int	ft_strlen_only_numbers(const char *nptr)
-{
-	int	len;
-
-	len = 0;
-	while (nptr[len] && (nptr[len] >= '0' && nptr[len] <= '9'))
-		len++;
-	return (len);
-}
-
 long	ft_atol(const char *nptr)
 {
-	long unsigned int	len;
-	long unsigned int	offset;
-	long				res;
-	int					times;
-	int					sign;
+	long	res;
+	int		neg;
+	int		i;
 
-	res = 0;
-	times = 0;
-	sign = 0;
-	offset = ft_isspace(nptr);
-	if (nptr[offset] == '-' || nptr[offset] == '+')
-		sign = 1;
-	len = ft_strlen_only_numbers(nptr + offset + sign);
-	while (len > 0)
+	i = ft_isspace(nptr);
+	neg = 0;
+	if (nptr[i] == '-' || nptr[i] == '+')
 	{
-		res += ft_ten_power((nptr[offset + len - (!sign)] - '0'), times);
-		times++;
-		len--;
+		if (nptr[i] == '-')
+			neg = 1;
+		i++;
 	}
-	if (nptr[offset] == '-')
+	res = 0;
+	while (nptr[i] >= '0' && nptr[i] <= '9')
+	{
+		res = res * 10 + (nptr[i] - '0');
+		i++;
+	}
+	if (neg)
 		res *= -1;
 	return (res);
 }
-
-/*
-int	main(void)
-{
-	const char *nptr = "         \t\n\v\f\r01234abc21";
-	printf("%d\n", atoi(nptr));
-	printf("%d\n", ft_atoi(nptr));
-}
-*/

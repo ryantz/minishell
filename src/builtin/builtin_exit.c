@@ -12,18 +12,25 @@
 
 #include "minishell.h"
 
+static void	print_numeric_error(char *arg)
+{
+	ft_putstr_fd("xiaoBij: exit: ", 2);
+	ft_putstr_fd(arg, 2);
+	ft_putendl_fd(": numeric argument required", 2);
+}
+
 int	builtin_exit(char **argv, int last_status, int *should_exit)
 {
 	long	code;
 
 	if (argv[1] && argv[2])
 	{
-		write_err("exit: too many arguments");
+		write_err("xiaoBij: exit: too many arguments");
 		return (1);
 	}
 	if (argv[1] && is_numeric(argv[1]) == E_FALSE)
 	{
-		write_err("exit: numeric argument required");
+		print_numeric_error(argv[1]);
 		*should_exit = 1;
 		return (2);
 	}

@@ -74,7 +74,15 @@ static t_status	build_pipeline_cmds(t_token **cursor, t_pipeline *pipeline)
 		}
 		append_cmd(&pipeline->cmds, cmd);
 		if (*cursor && (*cursor)->type == PIPE)
+		{
 			*cursor = (*cursor)->next;
+			if (!*cursor || (*cursor)->type == PIPE
+				|| (*cursor)->type == L_AND || (*cursor)->type == L_OR)
+			{
+				free_cmd_list(pipeline->cmds);
+				return (E_FALSE);
+			}
+		}
 	}
 	if (!pipeline->cmds)
 		return (E_FALSE);

@@ -70,6 +70,8 @@ static char	*find_executable(char *cmd, t_env *env, t_exec_err *err)
 	char	*result;
 
 	*err = EXEC_NOT_FOUND;
+	if (!cmd[0])
+		return (NULL);
 	if (ft_strchr(cmd, '/'))
 		return (resolve_direct_path(cmd, err));
 	path_val = env_get(env, "PATH");

@@ -83,7 +83,7 @@ static int	is_valid_identifier(char *str)
 
 static void	print_export_error(char *arg)
 {
-	ft_putstr_fd("minishell: export: `", 2);
+	ft_putstr_fd("xiaoBij: export: `", 2);
 	ft_putstr_fd(arg, 2);
 	ft_putendl_fd("': not a valid identifier", 2);
 }
